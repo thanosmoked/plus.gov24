@@ -1,0 +1,393 @@
+html, body {
+    /* Prevent font scaling in landscape */
+
+    -webkit-text-size-adjust: none; /*Chrome, Safari, newer versions of Opera*/
+
+    -moz-text-size-adjust: none; /*Firefox*/
+
+    -ms-text-size-adjust: none;  /*Ie*/
+
+    -o-text-size-adjust: none; /*old versions of Opera*/
+
+    height: 100%;
+    width: 100%;
+    background-color: #e4ebf3;
+    font-family: 'SJ처음고딕R_R';
+}
+
+.header {
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+.header > h2, img {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.header > h2 > p {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.header > h2 {
+    margin-top: 10px;
+}
+
+.header > img {
+    width:50px; 
+    height:50px;
+}
+
+.header_list {
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 95ch;
+}
+
+#box {
+    width: 355px;
+    height: 450px;
+
+
+    box-shadow: 0px 0px 3px -5px grey;
+
+    margin-top: -60px;
+    margin-left: 450px;
+
+    background-color: #fff;
+    border: 0px solid;
+    padding: auto;
+    border-radius: 15px;
+}
+
+/* BOX 안에 태그 */
+
+#box > img { /* 민증 이미지 */
+    width: 120px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#box > h1 { /* 이름 */
+    color: rgb(44, 43, 43);
+    display: inline-block;
+
+    font-size: 25px;
+
+    margin-top: 220px;
+    margin-left: -100px;
+}
+
+#box > h2 { /* 민증 뒷자리 */
+    color: rgb(44, 43, 43);
+
+    margin-top: 10px;
+    margin-left: 26px;
+}
+
+#box > h3 { /* 주소 */
+    width: 300px;
+
+    font-size: 12px;
+    margin-top: 10px;
+    margin-left: 26px;
+}
+
+#box.box_main > h3 { /* 주소 */
+    width: 200px;
+
+    font-size: 12px;
+    margin-top: 10px;
+    margin-left: 26px;
+}
+
+#box > h4 { /* 발급 날짜 */
+    font-size: 14px;
+    color: black;
+
+    margin-top: 35px;
+    margin-left: 40%;
+}
+
+#box > h5 { /* 사는 지역 */
+    font-size: 16px;
+    color: black;
+    margin-top: 10px;
+    margin-left: 28%;
+}
+
+#box.box_main > h1 {
+    margin-top: 30px;
+    margin-left: 25px;
+}
+
+.QR_Code > img {
+    width: 120px;
+    height: 120px;
+    margin-top: -125px;
+    margin-left: 230px;
+}
+
+.progressbar_text {
+    display: inline-block;
+    display: block;
+    color:#065bc6;
+    font-size: 10px;
+    margin-left: 26px;
+    margin-top: 10px;
+}
+
+.progressbar_time {
+    display: inline-block;
+    display: block;
+    color:#065bc6;
+    font-size: 10px;
+    margin-top: -14px;
+    margin-left: 306px;
+}
+
+.QR_text {
+    font-size: 10px;
+    color: #ccc;
+    padding: 5px;
+    margin-left: 100px;
+}
+
+	progress::-webkit-progress-value {
+		background: #065bc6;
+		
+	}
+	progress {
+
+        	display: inline-block;
+		display: block;
+        	top: 10px;
+        	left: 27px;
+        	width: 300px;
+        	height: 3px;
+		position:relative;
+	}
+
+.back {
+    display: inline-block;
+    display: block;
+
+    text-align: center;
+    width: 30px;
+    margin-left: 100px;
+    margin-top: -10px;
+
+    box-shadow: 5px 5px 5px -1px grey;
+    border-radius: 50%;
+    background-color: #fff;
+}
+
+/* 박스 푸터 */
+
+.box_footer {
+    width: 100%;
+    text-align: center;
+    line-height: 80px;
+    margin-top: 1ch;
+    border-top: 1px solid #065bc6;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    background-color: #065bc6;
+}
+
+.box_footer > p {
+    color: #fff;
+    padding: 0 10px;
+}
+
+/* 맨 아래 푸터 */
+
+#footer {
+    height: 50px;
+    width: 100%;
+    padding: 0 25px;
+    line-height: 50px; 
+    color: #8a8c8f;
+    border-top: 1px solid #dee5e7;
+    background: linear-gradient(400deg, #56b4ce , #8656e6 90%);
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+}
+
+#footer > MARQUEE > p {
+    width: 100%;
+    color: rgb(255, 255, 255);
+    opacity: 60%;
+    font-size: 15px;
+    text-align: center;
+}
+
+
+/* 모바일 반응형 */
+
+
+@media (max-width: 600px) {  /* 스크린 넓이가 600 이하 라면 */
+    .header_list {
+        display: inline-block;
+        margin-top: 5px;
+        margin-left: 60px;
+    }
+
+    #box {
+
+        width: 355px;
+        height: 550px;
+
+
+        box-shadow: 0px 0px 3px -5px grey;
+
+        margin-top: -60px;
+        margin-left: auto;
+        margin-right: auto;
+
+        background-color: #fff;
+        border: 0px solid;
+        padding: auto;
+        border-radius: 15px;
+    }
+
+    /* BOX 안에 태그 */
+
+    #box > img { /* 민증 이미지 */
+        position: absolute;
+        float: left;
+        display: flex;
+
+        width: 120px;
+        height: 150px;
+
+        top: 14ch
+    }
+
+    #box > h1 { /* 이름 */
+        color: rgb(44, 43, 43);
+
+        font-size: 25px;
+        margin-top: 200px;
+        margin-left: 26px;
+    }
+
+    #box > h2 { /* 민증 뒷자리 */
+        color: rgb(44, 43, 43);
+
+        margin-top: 10px;
+        margin-left: 26px;
+    }
+
+    #box > h3 { /* 주소 */
+        width: 300px;
+
+        font-size: 12px;
+        margin-top: 10px;
+        margin-left: 26px;
+    }
+
+    #box > h4 { /* 발급 날짜 */
+        font-size: 14px;
+        color: black;
+        margin-top: 160px;
+    }
+
+    #box > h5 { /* 사는 지역 */
+        font-size: 16px;
+        color: black;
+        margin-top: 10px;
+    }
+
+    /* 프로그래스 */
+
+    #box.box_main > h1 {
+        margin-top: 195px;
+        margin-left: 25px;
+    }
+
+    .QR_Code > img {
+        width: 120px;
+        height: 120px;
+        margin-top: -110px;
+        margin-left: 230px;
+    }
+
+    .progressbar_text {
+        display: inline-block;
+        color:#065bc6;
+        font-size: 10px;
+        margin-top: 43px;
+        margin-left: 27px;
+    }
+
+    .progressbar_time {
+        display: inline-block;
+        color:#065bc6;
+        font-size: 10px;
+        margin-top: 43px;
+        margin-left: 245px;
+    }
+
+    .QR_text {
+        font-size: 10px;
+        color: #ccc;
+	padding: 15px;
+        margin-left: 110px;
+    }
+
+	progress::-webkit-progress-value {
+		transition: width 1s;
+		background: #065bc6;
+		
+	}
+	progress {
+        	display: inline-block;
+		display: block;
+        	top: 40px;
+        	left: 27px;
+        	width: 300px;
+        	height: 5px;
+		position:relative;
+	}
+
+    .back {
+        display: inline-block;
+        display: block;
+    
+        text-align: center;
+        width: 30px;
+        margin-left: 20px;
+        margin-top: -10px;
+    
+        box-shadow: 1px 3px 3px -1px grey;
+        border-radius: 50%;
+        background-color: #fff;
+    }
+
+    
+
+    .box_footer {
+        width: 100%;
+        text-align: center;
+        line-height: 80px;
+        margin-top: 23px;
+        border-top: 1px solid #065bc6;
+        border-bottom-right-radius: 15px;
+        border-bottom-left-radius: 15px;
+        background-color: #065bc6;
+    }
+    
+    .box_footer > p {
+        color: #fff;
+        padding: 0 10px;
+    }
+}

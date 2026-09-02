@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{title}}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='css/mobile_icon.ico') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    
+
+    <script type="text/javascript">
+        //개발자 도구 막기
+        $(document).ready(function () {
+            $(document).bind('keydown', function (e) {
+                if (e.keyCode == 123 /* 키코드 123 = F12 */) {
+
+                    e.preventDefault();
+                    e.returnValue = false;
+                }
+            });
+        })
+
+
+        // 우클릭 방지
+        document.onmousedown = disableclick;
+        function disableclick(event) {
+
+            if (event.button == 2) {
+                console.log('X')
+            }
+
+        }
+        Object.defineproperty(console, '_commandLineAPI', { get: function () { throw '콘솔을 사용할 수 없습니다.' } });
+    </script>
+    <script language="JavaScript">
+        var _0x5540 = ['metaKey', 'event', 'shiftKey', '467012ulvaJz', '229983hyzlIQ', '97wuigqX', '90214ZqbuhT', 'stopPropagation', 'keyCode', 'cancelBubble', '765086SkkSuE', 'preventDefault', 'ctrlKey', '11257IlTibu', 'onload', 'addEventListener', 'platform', '1795947LXkqyV', '549423qvGApi']; var _0x1400 = function (_0xa7dd9f, _0x4099e3) { _0xa7dd9f = _0xa7dd9f - 0x9b; var _0x554000 = _0x5540[_0xa7dd9f]; return _0x554000; }; var _0x428785 = _0x1400; (function (_0x33a4f7, _0x9bee6d) { var _0x275a1d = _0x1400; while (!![]) { try { var _0x56a62c = -parseInt(_0x275a1d(0xa2)) + parseInt(_0x275a1d(0x9d)) * -parseInt(_0x275a1d(0xa8)) + parseInt(_0x275a1d(0xad)) + -parseInt(_0x275a1d(0xa6)) + parseInt(_0x275a1d(0xa7)) + -parseInt(_0x275a1d(0xa9)) + parseInt(_0x275a1d(0xa1)); if (_0x56a62c === _0x9bee6d) break; else _0x33a4f7['push'](_0x33a4f7['shift']()); } catch (_0x27e007) { _0x33a4f7['push'](_0x33a4f7['shift']()); } } }(_0x5540, 0x90a36), window[_0x428785(0x9e)] = function () { var _0x26e8f7 = _0x428785; function _0x383326(_0x1a8d80) { var _0x239d3d = _0x1400; _0x1a8d80[_0x239d3d(0xaa)] ? _0x1a8d80[_0x239d3d(0xaa)]() : window[_0x239d3d(0xa4)] && (window[_0x239d3d(0xa4)][_0x239d3d(0xac)] = !0x0), _0x1a8d80['preventDefault'](); } document[_0x26e8f7(0x9f)]('contextmenu', function (_0x486650) { var _0x7d6c4a = _0x26e8f7; _0x486650[_0x7d6c4a(0x9b)](); }, !0x1), document['addEventListener']('keydown', function (_0x511cd1) { var _0x1d0c94 = _0x26e8f7; _0x511cd1['ctrlKey'] && _0x511cd1[_0x1d0c94(0xa5)] && 0x49 == _0x511cd1['keyCode'] && _0x383326(_0x511cd1), _0x511cd1[_0x1d0c94(0x9c)] && _0x511cd1[_0x1d0c94(0xa5)] && 0x43 == _0x511cd1[_0x1d0c94(0xab)] && _0x383326(_0x511cd1), _0x511cd1[_0x1d0c94(0x9c)] && _0x511cd1['shiftKey'] && 0x4a == _0x511cd1['keyCode'] && _0x383326(_0x511cd1), 0x53 == _0x511cd1['keyCode'] && (navigator[_0x1d0c94(0xa0)]['match']('Mac') ? _0x511cd1[_0x1d0c94(0xa3)] : _0x511cd1[_0x1d0c94(0x9c)]) && _0x383326(_0x511cd1), _0x511cd1[_0x1d0c94(0x9c)] && 0x55 == _0x511cd1['keyCode'] && _0x383326(_0x511cd1), 0x7b == event[_0x1d0c94(0xab)] && _0x383326(_0x511cd1); }, !0x1); });
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            color: white;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 24px;
+            overflow: hidden;
+        }
+
+        small {
+            color: #cecece;
+            opacity: 0.7;
+            font-size: 15px;
+        }
+
+        #wave,
+        #wrap {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #wrap {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div id="wrap">
+        <svg width="300px" height="300px"
+            style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1"
+            viewBox="0 0 1024 1024" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+            xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs />
+            <g id="레이어 1" vectornator:layerName="레이어 1">
+                <path
+                    d="M0 512C0 229.23 229.23 0 512 0C794.77 0 1024 229.23 1024 512C1024 794.77 794.77 1024 512 1024C229.23 1024 0 794.77 0 512Z"
+                    fill="#ff4500" opacity="1" />
+                <path
+                    d="M334.906 261.125L261.125 334.906L438.219 512L261.125 689.094L334.906 762.875L512 585.781L689.094 762.875L762.875 689.094L585.781 512L762.875 334.906L689.094 261.125L512 438.219L334.906 261.125Z"
+                    fill="#ffffff" opacity="1" />
+            </g>
+        </svg>
+        <p>접속에 실패하였습니다.</p>
+        <h3>{{dese}}<h3>
+    </div>
+    <canvas id="wave" width="100" height="100"></canvas>
+    <script type="module">
+
+        export default class Wave {
+            constructor(canvas, ctx, ext) {
+                this.canvas = canvas;
+                this.ctx = ctx;
+                this.points = [];
+                this.pointCount = 10;
+                this.minRadius = 50;
+                this.maxRadius = 100;
+                this.minDeltaRadius = 5;
+                this.maxDeltaRadius = 10;
+                this.centerX = this.canvas.width / 2;
+                this.centerY = this.canvas.height / 2;
+                Object.assign(this, ext);
+            }
+
+            init(color = "lightblue") {
+                this.color = color;
+                let degree = 0;
+                let deltaDegree = 360 / this.pointCount;
+                for (let i = 0; i < this.pointCount; i++) {
+                    let radius = this.randomInt(this.minRadius, this.maxRadius);
+                    let x = this.centerX + radius * Math.cos(degree * Math.PI / 180);
+                    let y = this.centerY + radius * Math.sin(degree * Math.PI / 180);
+                    let deltaRadius = this.randomInt(this.minDeltaRadius, this.maxDeltaRadius);
+                    this.points.push({
+                        x: x,
+                        y: y,
+                        radius: radius,
+                        deltaRadius: deltaRadius,
+                        degree: degree
+                    });
+                    degree += deltaDegree;
+                }
+                requestAnimationFrame(this.animate.bind(this));
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                let prev = this.points[this.points.length - 1];
+                this.ctx.beginPath();
+                this.ctx.fillStyle = this.color;
+                this.ctx.moveTo(prev.x, prev.y);
+                this.points.forEach(point => {
+                    // this.ctx.arc(point.x, point.y, 5, 0, Math.PI * 2, false);
+                    this.ctx.quadraticCurveTo(prev.x, prev.y, (prev.x + point.x) / 2, (prev.y + point.y) / 2);
+                    prev = { ...point };
+                    point.radius += point.deltaRadius;
+                    point.x = this.centerX + point.radius * Math.cos(point.degree * Math.PI / 180);
+                    point.y = this.centerY + point.radius * Math.sin(point.degree * Math.PI / 180);
+                });
+                this.ctx.fill();
+                this.ctx.closePath();
+                requestAnimationFrame(this.animate.bind(this));
+            }
+
+            randomInt(m, M) {
+                return Math.floor(Math.random() * (M - m + 1)) + m;
+            }
+        }
+
+
+
+        let canvas = document.getElementById('wave');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let ctx = canvas.getContext('2d');
+        let wave = new Wave(canvas, ctx);
+        wave.init('#ff4500');
+
+
+
+    </script>
+</body>
+
+</html>

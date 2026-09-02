@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>PASS 본인확인</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+            background-color: #ffffff;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 전체 래퍼 */
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100vh;
+            padding: 60px 32px 40px;
+        }
+
+        /* 상단 영역 */
+        .top-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* 아이콘 원 */
+        .icon-circle {
+            width: 100px;
+            height: 100px;
+            background-color: #f0f2f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 36px;
+            position: relative;
+        }
+
+        /* 신분증 아이콘 SVG */
+        .id-icon {
+            width: 52px;
+            height: 40px;
+        }
+
+        /* 파란 체크 뱃지 */
+        .check-badge {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 28px;
+            height: 28px;
+            background-color: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        /* 이름 */
+        .name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        /* 생년월일 */
+        .birthdate {
+            font-size: 16px;
+            color: #666666;
+            margin-bottom: 36px;
+            font-weight: 400;
+        }
+
+        /* 구분선 */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background-color: #f0f0f0;
+            margin-bottom: 28px;
+        }
+
+        /* 확인 텍스트 */
+        .confirm-text {
+            font-size: 15px;
+            color: #333333;
+            text-align: center;
+            line-height: 1.7;
+            margin-bottom: 8px;
+        }
+
+        /* 일치 링크 텍스트 */
+        .match-link {
+            font-size: 15px;
+            color: #333333;
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        .match-link a {
+            color: #1a73e8;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        /* 하단 버튼 */
+        .bottom-section {
+            width: 100%;
+        }
+
+        .close-btn {
+            width: 100%;
+            height: 54px;
+            background-color: #e8eaed;
+            color: #444444;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .close-btn:active {
+            background-color: #d0d3d8;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="top-section">
+            <!-- 아이콘 -->
+            <div class="icon-circle">
+                <!-- 신분증 아이콘 -->
+                <svg class="id-icon" viewBox="0 0 52 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="1" y="1" width="50" height="38" rx="5" stroke="#555" stroke-width="2.5" fill="none"/>
+                    <circle cx="17" cy="18" r="7" stroke="#555" stroke-width="2" fill="none"/>
+                    <line x1="28" y1="13" x2="44" y2="13" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="28" y1="19" x2="44" y2="19" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="28" y1="25" x2="38" y2="25" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <!-- 파란 체크 뱃지 -->
+                <div class="check-badge">
+                    <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                        <path d="M1.5 5L5.5 9L12.5 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 이름 -->
+            <div class="name">{{ name }}</div>
+
+            <!-- 생년월일 -->
+            <div class="birthdate">{{ birthdate }}</div>
+
+            <div class="divider"></div>
+
+            <!-- 확인 텍스트 -->
+            <p class="confirm-text">진위확인을 요청하신<br>주민등록증 모바일 확인서비스는</p>
+            <p class="match-link">등록된 내용과 <a href="#">일치합니다.</a></p>
+        </div>
+
+        <!-- 닫기 버튼 -->
+        <div class="bottom-section">
+            <button class="close-btn" onclick="window.history.back()">닫기</button>
+        </div>
+    </div>
+</body>
+</html>
