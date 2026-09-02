@@ -21,7 +21,7 @@ OWNER_ID = int(os.getenv("OWNER_ID", "0"))
 #  1. 환경변수 DB_PATH / IMAGES_PATH / PROOFS_PATH (명시적 지정 최우선)
 #  2. Railway  → RAILWAY_VOLUME_MOUNT_PATH  (ex. /data)
 #  3. Oracle Cloud / Docker → /data 디렉토리 존재 여부
-#  4. PythonAnywhere → ~/mysite_data
+#  4. Alwaysdata → ~/data
 #  5. 기본값 → 프로젝트 내 DB/ 폴더 (로컬 개발용)
 #
 def _resolve_base() -> str:
@@ -34,11 +34,11 @@ def _resolve_base() -> str:
     if os.path.isdir("/data"):
         return "/data"
 
-    # 3. PythonAnywhere 홈 기반 경로
+    # 3. Alwaysdata → ~/data
     home = os.path.expanduser("~")
-    pa_data = os.path.join(home, "mysite_data")
-    if os.path.isdir(pa_data):
-        return pa_data
+    ad_data = os.path.join(home, "data")
+    if os.path.isdir(ad_data):
+        return ad_data
 
     # 4. 로컬 개발 기본값
     return os.path.join(os.path.dirname(__file__), "DB")
