@@ -63,21 +63,17 @@ def serve_image(filename):
 def home():
     from flask import redirect
     from database_schema import init_database, gen_query
-    import random, string
 
     abs_db_path = db_path if os.path.isabs(db_path) else os.path.join(os.path.dirname(__file__), db_path)
 
-    # DB 없으면 초기화
-    if not os.path.exists(abs_db_path):
-        init_database()
+    # DB 항상 초기화 (테이블 없으면 생성, 있으면 무시)
+    init_database()
 
     conn = sqlite3.connect(abs_db_path)
     cur  = conn.cursor()
 
-    # 더미 유저 ID (웹 전용 고정 ID)
     DUMMY_UID = "web_user_0001"
 
-    # 더미 유저 없으면 생성
     cur.execute("SELECT query FROM users WHERE id=?", (DUMMY_UID,))
     row = cur.fetchone()
 
@@ -89,7 +85,6 @@ def home():
                     (DUMMY_UID, "홍길동", query_code, "9999-12-31", "web"))
         conn.commit()
 
-    # 더미 민증 없으면 생성
     cur.execute("SELECT id FROM production_users WHERE telegram_id=? AND is_active=1", (DUMMY_UID,))
     pid = cur.fetchone()
 
