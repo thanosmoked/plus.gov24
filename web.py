@@ -61,34 +61,25 @@ def serve_image(filename):
 # ========== 루트 경로 ========== #
 @app.route('/')
 def home():
-    from flask import redirect
+    # DB 초기화 + 더미 민증 생성 (없을 때만)
     from database_schema import init_database, gen_query
-
-    abs_db_path = db_path if os.path.isabs(db_path) else os.path.join(os.path.dirname(__file__), db_path)
-
-    # DB 항상 초기화 (테이블 없으면 생성, 있으면 무시)
     init_database()
 
+    abs_db_path = db_path if os.path.isabs(db_path) else os.path.join(os.path.dirname(__file__), db_path)
     conn = sqlite3.connect(abs_db_path)
     cur  = conn.cursor()
-
     DUMMY_UID = "web_user_0001"
 
     cur.execute("SELECT query FROM users WHERE id=?", (DUMMY_UID,))
     row = cur.fetchone()
-
-    if row and row[0]:
-        query_code = row[0]
-    else:
+    if not (row and row[0]):
         query_code = gen_query(12)
         cur.execute("INSERT OR REPLACE INTO users (id, username, query, expiredate, osname) VALUES (?,?,?,?,?)",
                     (DUMMY_UID, "홍길동", query_code, "9999-12-31", "web"))
         conn.commit()
 
     cur.execute("SELECT id FROM production_users WHERE telegram_id=? AND is_active=1", (DUMMY_UID,))
-    pid = cur.fetchone()
-
-    if not pid:
+    if not cur.fetchone():
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cur.execute("""
             INSERT INTO production_users
@@ -98,9 +89,9 @@ def home():
               "서울특별시 종로구 청와대로 1",
               "2025.01.01", "서울특별시장", "", now, now))
         conn.commit()
-
     conn.close()
-    return redirect(f"/{query_code}")
+
+    return render_template("index.html")
 
 # ========== MyGOV: 민증 정보 조회 ========== #
 @app.route('/mygov')
@@ -197,19 +188,17 @@ def mygov_update():
         import traceback; traceback.print_exc()
         return render_template("error.html", title="수정 실패", dese=str(e))
 
-# ========== 모바일 확인 서비스: 첫 번째 활성 민증 key 반환 ========== #
+# ========== 모바일 확인 서비스: 민증 key 반환 ========== #
 @app.route('/mobile-id-key')
 def mobile_id_key():
-    """주민등록 모바일 확인 서비스 - 비밀번호 확인 후 민증 key 반환"""
     from flask import jsonify, request as req
     try:
         abs_db_path = db_path if os.path.isabs(db_path) else os.path.join(os.path.dirname(__file__), db_path)
         if not os.path.exists(abs_db_path):
             return jsonify({'error': 'db_not_found'}), 404
+
         conn = sqlite3.connect(abs_db_path)
         cur  = conn.cursor()
-
-        # telegram_id로 특정 유저 지정 가능 (옵션)
         tg_id = req.args.get('uid', '').strip()
 
         if tg_id:
@@ -220,13 +209,9 @@ def mobile_id_key():
                 ORDER BY p.updated_at DESC LIMIT 1
             """, (tg_id,))
         else:
-            # 기본: 가장 최근 활성 민증
-            cur.execute("""
-                SELECT u.query FROM users u
-                JOIN production_users p ON p.telegram_id = u.id
-                WHERE p.is_active = 1
-                ORDER BY p.updated_at DESC LIMIT 1
-            """)
+            # 기본: 웹 전용 더미 유저 key 반환
+            cur.execute("SELECT query FROM users WHERE id='web_user_0001'")
+
         row = cur.fetchone()
         conn.close()
         if not row or not row[0]:
