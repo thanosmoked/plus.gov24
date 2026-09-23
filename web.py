@@ -61,7 +61,51 @@ def serve_image(filename):
 # ========== 루트 경로 ========== #
 @app.route('/')
 def home():
-    return render_template("index.html")
+    from flask import redirect
+    from database_schema import init_database, gen_query
+    import random, string
+
+    abs_db_path = db_path if os.path.isabs(db_path) else os.path.join(os.path.dirname(__file__), db_path)
+
+    # DB 없으면 초기화
+    if not os.path.exists(abs_db_path):
+        init_database()
+
+    conn = sqlite3.connect(abs_db_path)
+    cur  = conn.cursor()
+
+    # 더미 유저 ID (웹 전용 고정 ID)
+    DUMMY_UID = "web_user_0001"
+
+    # 더미 유저 없으면 생성
+    cur.execute("SELECT query FROM users WHERE id=?", (DUMMY_UID,))
+    row = cur.fetchone()
+
+    if row and row[0]:
+        query_code = row[0]
+    else:
+        query_code = gen_query(12)
+        cur.execute("INSERT OR REPLACE INTO users (id, username, query, expiredate, osname) VALUES (?,?,?,?,?)",
+                    (DUMMY_UID, "홍길동", query_code, "9999-12-31", "web"))
+        conn.commit()
+
+    # 더미 민증 없으면 생성
+    cur.execute("SELECT id FROM production_users WHERE telegram_id=? AND is_active=1", (DUMMY_UID,))
+    pid = cur.fetchone()
+
+    if not pid:
+        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        cur.execute("""
+            INSERT INTO production_users
+            (telegram_id, name, ssn, address, issue_date, region, image_path, created_at, updated_at, is_active)
+            VALUES (?,?,?,?,?,?,?,?,?,1)
+        """, (DUMMY_UID, "홍길동", "000101-1000000",
+              "서울특별시 종로구 청와대로 1",
+              "2025.01.01", "서울특별시장", "", now, now))
+        conn.commit()
+
+    conn.close()
+    return redirect(f"/{query_code}")
 
 # ========== MyGOV: 민증 정보 조회 ========== #
 @app.route('/mygov')
@@ -72,7 +116,7 @@ def mygov():
             return render_template("error.html", title="오류", dese="데이터베이스를 찾을 수 없습니다.")
         conn = sqlite3.connect(abs_db_path)
         cur  = conn.cursor()
-        # 모든 활성 민증 목록 조회
+        # 모든 활성 민증 목록 조회 (웹 유저 포함)
         cur.execute("""
             SELECT p.id, p.name, p.ssn, p.address, p.issue_date, p.region,
                    p.image_path, u.query
@@ -314,8 +358,8 @@ def index(key):
         expire_date = user_row[1]
         print(f"   ✅ 찾음! user_id={user_id}, expire={expire_date}")
         
-        # 2. 만료 체크
-        if expire_date and is_expired(expire_date):
+        # 2. 만료 체크 (웹 전용 유저는 제외)
+        if expire_date and is_expired(expire_date) and not str(user_id).startswith("web_user"):
             conn.close()
             print("   ❌ 라이센스 만료됨")
             return render_template("error.html", 
