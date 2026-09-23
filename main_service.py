@@ -44,8 +44,8 @@ if __name__ == "__main__":
     print("🤖 텔레그램 봇: python-telegram-bot")
     print("=" * 70)
     
-    # 포트 설정
-    port = int(os.environ.get("PORT", 10000))
+    # 포트 설정 (Fly.io는 8080 기본)
+    port = int(os.environ.get("PORT", 8080))
     
     print(f"\n🌐 웹 서버 주소: http://localhost:{port}")
     print("💡 Ctrl+C를 눌러 종료합니다.\n")
