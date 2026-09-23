@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='css/mobile_icon.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/font_SJSejongGothic.css') }}">
+  <title>회원가입 - 정부24+</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f6f8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .gov-banner {
+      background: #333;
+      padding: 7px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .gov-banner p { font-size: 11px; color: #ccc; letter-spacing: -0.2px; }
+
+    .page-wrap {
+      min-height: calc(100vh - 32px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px 48px;
+    }
+
+    /* ── 상단 헤더 (뒤로가기) ── */
+    .top-header {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .back-btn {
+      cursor: pointer;
+      padding: 4px;
+      color: #555;
+      display: flex;
+      align-items: center;
+    }
+    .top-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: -0.4px;
+    }
+
+    /* ── 카드 ── */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px 24px 24px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+      letter-spacing: -0.4px;
+    }
+    .card-sub {
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 24px;
+      letter-spacing: -0.2px;
+    }
+
+    /* ── 에러 / 힌트 ── */
+    .error-box {
+      background: #fff0f3;
+      border: 1px solid #ffd0d8;
+      border-radius: 10px;
+      padding: 11px 14px;
+      margin-bottom: 18px;
+      font-size: 13.5px;
+      color: #c0002a;
+      font-family: 'Noto Sans KR', sans-serif;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #444;
+      margin-bottom: 7px;
+      letter-spacing: -0.2px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid #e4e6ea;
+      border-radius: 10px;
+      font-size: 15px;
+      color: #1a1a1a;
+      font-family: 'Noto Sans KR', sans-serif;
+      outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      background: #fafafa;
+    }
+    .form-group input:focus {
+      border-color: #3b5bdb;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(59,91,219,0.10);
+    }
+    .form-group input::placeholder { color: #bbb; }
+    .input-hint {
+      font-size: 11.5px;
+      color: #aaa;
+      margin-top: 5px;
+      letter-spacing: -0.1px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px 0;
+      background: #1a7f5a;
+      color: #fff;
+      border: none;
+      border-radius: 11px;
+      font-size: 15.5px;
+      font-weight: 700;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      letter-spacing: -0.3px;
+      margin-top: 8px;
+      transition: background 0.18s, transform 0.1s;
+    }
+    .btn-primary:active { background: #136347; transform: scale(0.98); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0;
+      color: #ccc;
+      font-size: 12px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #eee;
+    }
+
+    .bottom-link {
+      text-align: center;
+      font-size: 13.5px;
+      color: #888;
+      letter-spacing: -0.2px;
+    }
+    .bottom-link a {
+      color: #3b5bdb;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .bottom-link a:active { opacity: 0.7; }
+
+    /* ── 비밀번호 일치 표시 ── */
+    #pw-match-msg {
+      font-size: 12px;
+      margin-top: 5px;
+      letter-spacing: -0.1px;
+      min-height: 16px;
+    }
+    .match-ok  { color: #1a7f5a; }
+    .match-fail { color: #e8003d; }
+  </style>
+</head>
+<body>
+
+<div class="gov-banner">
+  <span style="font-size:13px;">🇰🇷</span>
+  <p>이 누리집은 대한민국 공식 전자정부 누리집입니다.</p>
+</div>
+
+<div class="page-wrap">
+
+  <!-- 상단 헤더 -->
+  <div class="top-header">
+    <div class="back-btn" onclick="history.back()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </div>
+    <span class="top-title">회원가입</span>
+  </div>
+
+  <div class="card">
+
+    <div class="card-title">계정 만들기</div>
+    <div class="card-sub">아이디와 비밀번호만으로 가입할 수 있어요</div>
+
+    {% if error %}
+    <div class="error-box">
+      <span>⚠</span>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    <form method="POST" action="/register" id="regForm">
+      <div class="form-group">
+        <label for="username">아이디</label>
+        <input type="text" id="username" name="username"
+               placeholder="3자 이상 영문/숫자"
+               value="{{ request.form.get('username', '') }}"
+               autocomplete="username"
+               minlength="3" maxlength="20" autofocus required>
+        <div class="input-hint">3~20자, 영문·숫자·밑줄(_) 사용 가능</div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" name="password"
+               placeholder="4자 이상"
+               autocomplete="new-password"
+               minlength="4" maxlength="30" required>
+        <div class="input-hint">4자 이상으로 설정해주세요</div>
+      </div>
+
+      <div class="form-group">
+        <label for="password2">비밀번호 확인</label>
+        <input type="password" id="password2" name="password2"
+               placeholder="비밀번호를 다시 입력하세요"
+               autocomplete="new-password"
+               minlength="4" maxlength="30" required>
+        <div id="pw-match-msg"></div>
+      </div>
+
+      <button type="submit" class="btn-primary" id="submitBtn">가입하기</button>
+    </form>
+
+    <div class="divider">이미 계정이 있으신가요?</div>
+
+    <div class="bottom-link">
+      <a href="/login">로그인하기</a>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  const pw1 = document.getElementById('password');
+  const pw2 = document.getElementById('password2');
+  const msg = document.getElementById('pw-match-msg');
+  const btn = document.getElementById('submitBtn');
+
+  function checkMatch() {
+    if (!pw2.value) { msg.textContent = ''; return; }
+    if (pw1.value === pw2.value) {
+      msg.textContent = '✓ 비밀번호가 일치합니다';
+      msg.className = 'match-ok';
+    } else {
+      msg.textContent = '✗ 비밀번호가 일치하지 않습니다';
+      msg.className = 'match-fail';
+    }
+  }
+
+  pw1.addEventListener('input', checkMatch);
+  pw2.addEventListener('input', checkMatch);
+
+  document.getElementById('regForm').addEventListener('submit', function(e) {
+    if (pw1.value !== pw2.value) {
+      e.preventDefault();
+      msg.textContent = '✗ 비밀번호가 일치하지 않습니다';
+      msg.className = 'match-fail';
+      pw2.focus();
+    }
+  });
+</script>
+
+</body>
+</html>

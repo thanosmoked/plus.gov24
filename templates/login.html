@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='css/mobile_icon.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/font_SJSejongGothic.css') }}">
+  <title>로그인 - 정부24+</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f6f8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── 공식 배너 ── */
+    .gov-banner {
+      background: #333;
+      padding: 7px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .gov-banner p { font-size: 11px; color: #ccc; letter-spacing: -0.2px; }
+
+    /* ── 페이지 래퍼 ── */
+    .page-wrap {
+      min-height: calc(100vh - 32px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px 48px;
+    }
+
+    /* ── 로고 영역 ── */
+    .logo-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+    .logo-area img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+    }
+    .logo-area .logo-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-family: 'SJ세종고딕B', 'Noto Sans KR', sans-serif;
+      letter-spacing: -0.5px;
+    }
+    .logo-area .logo-title span { color: #e8003d; }
+    .logo-area .logo-sub {
+      font-size: 13px;
+      color: #888;
+      letter-spacing: -0.2px;
+    }
+
+    /* ── 카드 ── */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px 24px 24px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    }
+
+    /* ── 에러 메시지 ── */
+    .error-box {
+      background: #fff0f3;
+      border: 1px solid #ffd0d8;
+      border-radius: 10px;
+      padding: 11px 14px;
+      margin-bottom: 18px;
+      font-size: 13.5px;
+      color: #c0002a;
+      font-family: 'Noto Sans KR', sans-serif;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    /* ── 폼 ── */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #444;
+      margin-bottom: 7px;
+      letter-spacing: -0.2px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid #e4e6ea;
+      border-radius: 10px;
+      font-size: 15px;
+      color: #1a1a1a;
+      font-family: 'Noto Sans KR', sans-serif;
+      outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      background: #fafafa;
+    }
+    .form-group input:focus {
+      border-color: #3b5bdb;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(59,91,219,0.10);
+    }
+    .form-group input::placeholder { color: #bbb; }
+
+    /* ── 제출 버튼 ── */
+    .btn-primary {
+      width: 100%;
+      padding: 14px 0;
+      background: #3b5bdb;
+      color: #fff;
+      border: none;
+      border-radius: 11px;
+      font-size: 15.5px;
+      font-weight: 700;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      letter-spacing: -0.3px;
+      margin-top: 6px;
+      transition: background 0.18s, transform 0.1s;
+    }
+    .btn-primary:active { background: #2f4ac4; transform: scale(0.98); }
+
+    /* ── 구분선 ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0;
+      color: #ccc;
+      font-size: 12px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #eee;
+    }
+
+    /* ── 하단 링크 ── */
+    .bottom-link {
+      text-align: center;
+      font-size: 13.5px;
+      color: #888;
+      letter-spacing: -0.2px;
+    }
+    .bottom-link a {
+      color: #3b5bdb;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .bottom-link a:active { opacity: 0.7; }
+  </style>
+</head>
+<body>
+
+<!-- 공식 배너 -->
+<div class="gov-banner">
+  <span style="font-size:13px;">🇰🇷</span>
+  <p>이 누리집은 대한민국 공식 전자정부 누리집입니다.</p>
+</div>
+
+<div class="page-wrap">
+
+  <!-- 로고 -->
+  <div class="logo-area">
+    <img src="{{ url_for('static', filename='css/icon.png') }}" alt="정부24 로고">
+    <div class="logo-title">정부24<span>+</span></div>
+    <div class="logo-sub">로그인 후 이용하실 수 있습니다</div>
+  </div>
+
+  <!-- 카드 -->
+  <div class="card">
+
+    {% if error %}
+    <div class="error-box">
+      <span>⚠</span>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    <form method="POST" action="/login{% if request.args.get('next') %}?next={{ request.args.get('next') }}{% endif %}">
+      <div class="form-group">
+        <label for="username">아이디</label>
+        <input type="text" id="username" name="username"
+               placeholder="아이디를 입력하세요"
+               value="{{ request.form.get('username', '') }}"
+               autocomplete="username" autofocus required>
+      </div>
+      <div class="form-group">
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" name="password"
+               placeholder="비밀번호를 입력하세요"
+               autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn-primary">로그인</button>
+    </form>
+
+    <div class="divider">또는</div>
+
+    <div class="bottom-link">
+      아직 계정이 없으신가요? <a href="/register">회원가입</a>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

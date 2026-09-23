@@ -144,6 +144,16 @@ def init_database():
         joined_at TEXT DEFAULT CURRENT_TIMESTAMP
     )""")
 
+    # 10. web_accounts - 웹 자체 회원가입 계정
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS web_accounts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL UNIQUE,
+        password_hash TEXT NOT NULL,
+        device_id TEXT UNIQUE,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )""")
+
     conn.commit()
     _migrate(cur, conn)
     conn.close()
@@ -182,6 +192,9 @@ def _migrate(cur, conn):
             ('bank_name', 'TEXT'),
             ('bank_account', 'TEXT'),
             ('bank_holder', 'TEXT'),
+        ]),
+        ('web_accounts', [
+            ('device_id', 'TEXT'),
         ]),
     ]
     for table, cols in migrations:
