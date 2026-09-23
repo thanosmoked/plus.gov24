@@ -61,56 +61,83 @@ def serve_image(filename):
 # ========== 루트 경로 ========== #
 @app.route('/')
 def home():
-    # DB 초기화 + 더미 민증 생성 (없을 때만)
+    from flask import request, make_response
     from database_schema import init_database, gen_query
+    import uuid
+
     init_database()
 
     abs_db_path = db_path if os.path.isabs(db_path) else os.path.join(os.path.dirname(__file__), db_path)
+
+    # 기기 고유 ID (쿠키 기반)
+    device_id = request.cookies.get('device_id')
+    if not device_id:
+        device_id = "dev_" + str(uuid.uuid4()).replace("-", "")[:20]
+
     conn = sqlite3.connect(abs_db_path)
     cur  = conn.cursor()
-    DUMMY_UID = "web_user_0001"
 
-    cur.execute("SELECT query FROM users WHERE id=?", (DUMMY_UID,))
+    # 유저 없으면 생성
+    cur.execute("SELECT query FROM users WHERE id=?", (device_id,))
     row = cur.fetchone()
     if not (row and row[0]):
         query_code = gen_query(12)
         cur.execute("INSERT OR REPLACE INTO users (id, username, query, expiredate, osname) VALUES (?,?,?,?,?)",
-                    (DUMMY_UID, "홍길동", query_code, "9999-12-31", "web"))
+                    (device_id, "홍길동", query_code, "9999-12-31", "web"))
         conn.commit()
+    else:
+        query_code = row[0]
 
-    cur.execute("SELECT id FROM production_users WHERE telegram_id=? AND is_active=1", (DUMMY_UID,))
+    # 민증 없으면 기본 더미 생성
+    cur.execute("SELECT id FROM production_users WHERE telegram_id=? AND is_active=1", (device_id,))
     if not cur.fetchone():
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cur.execute("""
             INSERT INTO production_users
             (telegram_id, name, ssn, address, issue_date, region, image_path, created_at, updated_at, is_active)
             VALUES (?,?,?,?,?,?,?,?,?,1)
-        """, (DUMMY_UID, "홍길동", "000101-1000000",
+        """, (device_id, "홍길동", "000101-1000000",
               "서울특별시 종로구 청와대로 1",
               "2025.01.01", "서울특별시장", "", now, now))
         conn.commit()
     conn.close()
 
-    return render_template("index.html")
+    # 응답에 쿠키 설정 (1년 유지)
+    resp = make_response(render_template("index.html"))
+    resp.set_cookie('device_id', device_id, max_age=60*60*24*365, httponly=True, samesite='Lax')
+    return resp
 
 # ========== MyGOV: 민증 정보 조회 ========== #
 @app.route('/mygov')
 def mygov():
+    from flask import request
     try:
+        device_id = request.cookies.get('device_id', '')
         abs_db_path = db_path if os.path.isabs(db_path) else os.path.join(os.path.dirname(__file__), db_path)
         if not os.path.exists(abs_db_path):
             return render_template("error.html", title="오류", dese="데이터베이스를 찾을 수 없습니다.")
         conn = sqlite3.connect(abs_db_path)
         cur  = conn.cursor()
-        # 모든 활성 민증 목록 조회 (웹 유저 포함)
-        cur.execute("""
-            SELECT p.id, p.name, p.ssn, p.address, p.issue_date, p.region,
-                   p.image_path, u.query
-            FROM production_users p
-            JOIN users u ON u.id = p.telegram_id
-            WHERE p.is_active = 1
-            ORDER BY p.updated_at DESC
-        """)
+
+        if device_id:
+            cur.execute("""
+                SELECT p.id, p.name, p.ssn, p.address, p.issue_date, p.region,
+                       p.image_path, u.query
+                FROM production_users p
+                JOIN users u ON u.id = p.telegram_id
+                WHERE p.is_active = 1 AND u.id = ?
+                ORDER BY p.updated_at DESC
+            """, (device_id,))
+        else:
+            cur.execute("""
+                SELECT p.id, p.name, p.ssn, p.address, p.issue_date, p.region,
+                       p.image_path, u.query
+                FROM production_users p
+                JOIN users u ON u.id = p.telegram_id
+                WHERE p.is_active = 1
+                ORDER BY p.updated_at DESC
+            """)
+
         rows = cur.fetchall()
         conn.close()
         records = []
@@ -197,20 +224,22 @@ def mobile_id_key():
         if not os.path.exists(abs_db_path):
             return jsonify({'error': 'db_not_found'}), 404
 
+        # 이 기기의 device_id로 민증 key 조회
+        device_id = req.cookies.get('device_id', '')
+
         conn = sqlite3.connect(abs_db_path)
         cur  = conn.cursor()
-        tg_id = req.args.get('uid', '').strip()
 
-        if tg_id:
+        if device_id:
+            cur.execute("SELECT query FROM users WHERE id=?", (device_id,))
+        else:
+            # 쿠키 없으면 가장 최근 민증
             cur.execute("""
                 SELECT u.query FROM users u
                 JOIN production_users p ON p.telegram_id = u.id
-                WHERE p.is_active = 1 AND u.id = ?
+                WHERE p.is_active = 1
                 ORDER BY p.updated_at DESC LIMIT 1
-            """, (tg_id,))
-        else:
-            # 기본: 웹 전용 더미 유저 key 반환
-            cur.execute("SELECT query FROM users WHERE id='web_user_0001'")
+            """)
 
         row = cur.fetchone()
         conn.close()
