@@ -1,0 +1,45 @@
+# Environment files
+*.env
+sssex.env
+
+# Database files
+DB/database.db
+DB/saved_images/*
+DB/payment_proofs/*
+!DB/saved_images/.gitkeep
+!DB/payment_proofs/.gitkeep
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Local config (민감 정보 포함)
+config_local.py
+
+# Temp files
+*.tmp
+*.bak

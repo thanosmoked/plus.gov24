@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="정부24+">
+  <meta property="og:description" content="대한민국 공식 전자정부 서비스">
+  <meta property="og:image"       content="{{ url_for('static', filename='css/icon.png') }}">
+  <link rel="shortcut icon"    href="{{ url_for('static', filename='css/mobile_icon.ico') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='css/mobile_icon.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/font_SJSejongGothic.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/gov24_main.css') }}">
+  <title>정부24+</title>
+
+  <style>
+    /* ── 생활가이드 아이콘 컬러 ── */
+    .gi-yellow  { background: #fff5c0; }
+    .gi-pink    { background: #ffe0e8; }
+    .gi-purple  { background: #ede0ff; }
+    .gi-blue    { background: #ddeeff; }
+    .gi-green   { background: #d8f5e8; }
+    .gi-orange  { background: #ffe8d0; }
+    .gi-sky     { background: #d8f0ff; }
+    .gi-teal    { background: #d4f5f0; }
+    .gi-red     { background: #fde0e0; }
+    .gi-gray    { background: #ececec; }
+
+    /* ── 생활가이드 하단 링크 ── */
+    .guide-links {
+      background: #fff;
+      border-radius: 14px;
+      margin-top: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .guide-link-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 18px;
+      border-bottom: 1px solid #f2f2f2;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 14.5px;
+      color: #1a1a1a;
+      font-family: 'Noto Sans KR', sans-serif;
+      letter-spacing: -0.3px;
+    }
+    .guide-link-item:last-child { border-bottom: none; }
+    .guide-link-item:active { background: #f5f6f8; }
+    .guide-link-item .gli-arrow {
+      color: #bbb;
+      font-size: 16px;
+    }
+    .guide-more-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 0;
+      font-size: 13px;
+      color: #666;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      border-top: 1px solid #f0f0f0;
+      transition: background 0.15s;
+    }
+    .guide-more-btn:active { background: #f5f6f8; }
+
+    /* ── 모바일 확인 서비스 배너 ── */
+    .mobile-id-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-top: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .mobile-id-banner:active { background: #f5f6f8; }
+    .mobile-id-icon {
+      width: 36px;
+      height: 36px;
+      background: #1a7f5a;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .mobile-id-icon svg { width: 20px; height: 20px; }
+    .mobile-id-text {
+      flex: 1;
+      font-size: 13.5px;
+      color: #1a1a1a;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 500;
+      letter-spacing: -0.3px;
+    }
+    .mobile-id-arrow {
+      color: #bbb;
+      font-size: 16px;
+    }
+
+    /* ── 국민소통채널 ── */
+    .channel-section {
+      margin: 14px 14px 0;
+    }
+    .channel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .channel-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-family: 'SJ세종고딕B', 'Noto Sans KR', sans-serif;
+      letter-spacing: -0.4px;
+    }
+    .channel-add-btn {
+      width: 28px; height: 28px;
+      background: none; border: none;
+      font-size: 20px; color: #555;
+      cursor: pointer;
+    }
+    .channel-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .channel-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .channel-logo {
+      width: 28px; height: 28px;
+      object-fit: contain;
+    }
+    .channel-brand-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-family: 'Noto Sans KR', sans-serif;
+      letter-spacing: -0.3px;
+    }
+    .channel-brand-arrow {
+      font-size: 12px; color: #888; margin-left: 2px;
+    }
+    .channel-social-icons {
+      display: flex;
+      gap: 10px;
+      margin-left: auto;
+    }
+    .channel-social-icon {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.15s;
+      border: 1px solid #e8eaed;
+    }
+    .channel-social-icon:active { transform: scale(0.9); }
+    .channel-info-row {
+      margin-bottom: 12px;
+    }
+    .channel-info-label {
+      font-size: 12px;
+      color: #888;
+      font-family: 'Noto Sans KR', sans-serif;
+      margin-bottom: 4px;
+      letter-spacing: -0.2px;
+    }
+    .channel-info-value {
+      font-size: 13px;
+      color: #1a1a1a;
+      font-family: 'Noto Sans KR', sans-serif;
+      line-height: 1.6;
+      letter-spacing: -0.2px;
+    }
+    .channel-info-value small {
+      font-size: 11.5px;
+      color: #888;
+    }
+
+    /* ── 푸터 ── */
+    .site-footer {
+      margin: 14px 14px 0;
+      padding-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .footer-link {
+      font-size: 11.5px;
+      color: #888;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      letter-spacing: -0.2px;
+      transition: color 0.15s;
+    }
+    .footer-link:active { color: #333; }
+    .footer-copyright {
+      font-size: 11px;
+      color: #aaa;
+      font-family: 'Noto Sans KR', sans-serif;
+      letter-spacing: -0.2px;
+    }
+    .footer-top-btn {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+    .top-btn {
+      width: 34px; height: 34px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      transition: box-shadow 0.2s;
+      font-size: 14px; color: #555;
+    }
+    .top-btn:active { box-shadow: none; }
+
+    /* ── 검색바 마스코트 SVG ── */
+    .search-mascot-wrap {
+      width: 30px; height: 30px;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ① 공식 누리집 배너 -->
+  <div class="gov-banner anim-fade-up">
+    <span class="flag">🇰🇷</span>
+    <p>이 누리집은 대한민국 공식 전자정부 누리집입니다.</p>
+  </div>
+
+  <!-- ② 헤더 -->
+  <header class="header anim-fade-up anim-delay-1">
+    <div class="header-left">
+      <img src="{{ url_for('static', filename='css/icon.png') }}" class="header-logo" alt="정부24 로고">
+      <span class="header-title">정부24<span>+</span></span>
+    </div>
+    <div class="header-right">
+      <div class="header-ai" onclick="showToast('정부24 AI 서비스')">
+        <span class="ai-emoji">🐥</span>
+        <span class="ai-label">정부24 AI</span>
+      </div>
+      <div class="header-menu" onclick="toggleMenu()">
+        <div class="menu-bars">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="menu-label">전체메뉴</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ③ 메인 콘텐츠 -->
+  <main class="main-content">
+
+    <!-- 공지사항 -->
+    <div class="notice-bar anim-fade-up anim-delay-2" onclick="showToast('공지사항')">
+      <span class="bell-icon">🔔</span>
+      <span class="notice-text">공지사항 확인하기</span>
+      <span class="notice-arrow">›</span>
+    </div>
+
+    <!-- 검색바 -->
+    <div class="search-section anim-fade-up anim-delay-2">
+      <div class="search-bar" onclick="showToast('검색')">
+        <!-- 토끼 마스코트 SVG -->
+        <div class="search-mascot-wrap">
+          <svg viewBox="0 0 40 40" width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+            <!-- 귀 왼쪽 -->
+            <ellipse cx="13" cy="10" rx="4.5" ry="8" fill="#f0f0f0" stroke="#ddd" stroke-width="1"/>
+            <ellipse cx="13" cy="10" rx="2.5" ry="5.5" fill="#ffb6c1"/>
+            <!-- 귀 오른쪽 -->
+            <ellipse cx="27" cy="10" rx="4.5" ry="8" fill="#f0f0f0" stroke="#ddd" stroke-width="1"/>
+            <ellipse cx="27" cy="10" rx="2.5" ry="5.5" fill="#ffb6c1"/>
+            <!-- 얼굴 -->
+            <circle cx="20" cy="24" r="14" fill="#f7f7f7" stroke="#e0e0e0" stroke-width="1"/>
+            <!-- 눈 -->
+            <circle cx="15.5" cy="22" r="2" fill="#333"/>
+            <circle cx="24.5" cy="22" r="2" fill="#333"/>
+            <!-- 눈 하이라이트 -->
+            <circle cx="16.2" cy="21.2" r="0.7" fill="#fff"/>
+            <circle cx="25.2" cy="21.2" r="0.7" fill="#fff"/>
+            <!-- 코 -->
+            <ellipse cx="20" cy="26.5" rx="2" ry="1.3" fill="#ffb6c1"/>
+            <!-- 입 -->
+            <path d="M17.5 28.5 Q20 30.5 22.5 28.5" stroke="#ccc" stroke-width="1" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="search-placeholder">안녕하세요. 무엇을 알고 싶으세요?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#3b5bdb" stroke-width="2.2" width="20" height="20" style="flex-shrink:0;">
+          <circle cx="11" cy="11" r="7"/>
+          <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 자주 찾는 서비스 -->
+    <div class="section anim-fade-up anim-delay-3">
+      <div class="section-header">
+        <span class="section-title" onclick="showToast('자주 찾는 서비스')">
+          자주 찾는 서비스 <span class="arrow">›</span>
+        </span>
+        <button class="section-add-btn" onclick="showToast('서비스 추가')">＋</button>
+      </div>
+      <div class="service-card">
+        <div class="service-grid">
+
+          <div class="service-item" onclick="showToast('토지(임야)대장')">
+            <span class="service-item-text">토지(임야)대장</span>
+            <span class="service-item-icon">
+              <!-- 문서 아이콘 -->
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.8">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="8" y1="13" x2="16" y2="13"/>
+                <line x1="8" y1="17" x2="13" y2="17"/>
+              </svg>
+            </span>
+          </div>
+
+          <div class="service-item" onclick="showToast('주민등록등본')">
+            <span class="service-item-text">주민등록등본<br>(초...</span>
+            <span class="service-item-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.8">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="8" y1="13" x2="16" y2="13"/>
+                <line x1="8" y1="17" x2="13" y2="17"/>
+              </svg>
+            </span>
+          </div>
+
+          <div class="service-item" onclick="showToast('자동차등록원부')">
+            <span class="service-item-text">자동차등록원부</span>
+            <span class="service-item-icon">
+              <!-- 자동차 아이콘 -->
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.8">
+                <rect x="1" y="11" width="22" height="8" rx="2"/>
+                <path d="M5 11l2-5h10l2 5"/>
+                <circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/>
+              </svg>
+            </span>
+          </div>
+
+          <div class="service-item" onclick="showToast('건축물대장')">
+            <span class="service-item-text">건축물대장</span>
+            <span class="service-item-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.8">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </span>
+          </div>
+
+          <div class="service-item" onclick="showToast('가족관계증명서')">
+            <span class="service-item-text underline">가족관계증명서</span>
+            <span class="service-item-icon">
+              <!-- 외부링크 아이콘 -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b5bdb" stroke-width="2">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </span>
+          </div>
+
+          <div class="service-item" onclick="showToast('여권 재발급')">
+            <span class="service-item-text">여권 재발급</span>
+            <span class="service-item-icon">
+              <!-- 연필 아이콘 -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f0a030" stroke-width="2">
+                <path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+              </svg>
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 혜택알리미 -->
+    <div class="section anim-fade-up anim-delay-4">
+      <div class="section-header">
+        <span class="section-title" onclick="showToast('혜택알리미')">
+          혜택알리미 <span class="arrow">›</span>
+        </span>
+        <span class="section-right-link" onclick="showToast('나의 혜택')">나의 혜택 ›</span>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-grid">
+          <div class="benefit-item pink" onclick="showToast('급한 생활비, 대출')">
+            급한 생활비, 대출 ...
+          </div>
+          <div class="benefit-item sky" onclick="showToast('창업을 준비 중이라')">
+            창업을 준비 중이라...
+          </div>
+          <div class="benefit-item text-only" onclick="showToast('혼자 살아도 든든하')">
+            혼자 살아도 든든하...
+          </div>
+          <div class="benefit-item text-only" onclick="showToast('양육 부담을 줄일 수')">
+            양육 부담을 줄일 수...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 생활가이드 -->
+    <div class="section anim-fade-up anim-delay-5">
+      <div class="section-header">
+        <span class="section-title" onclick="showToast('생활가이드')">
+          생활가이드 <span class="arrow">›</span>
+        </span>
+      </div>
+
+      <!-- 가로 스크롤 아이콘 -->
+      <div class="guide-scroll-wrap">
+        <div class="guide-scroll">
+          <div class="guide-item" onclick="showToast('결혼')">
+            <div class="guide-icon-wrap gi-yellow">💍</div>
+            <span class="guide-label">결혼</span>
+          </div>
+          <div class="guide-item" onclick="showToast('보건복지')">
+            <div class="guide-icon-wrap gi-pink">🏥</div>
+            <span class="guide-label">보건복지</span>
+          </div>
+          <div class="guide-item" onclick="showToast('임신출산')">
+            <div class="guide-icon-wrap gi-purple">🤰</div>
+            <span class="guide-label">임신출산</span>
+          </div>
+          <div class="guide-item" onclick="showToast('복지')">
+            <div class="guide-icon-wrap gi-sky">🤝</div>
+            <span class="guide-label">복지</span>
+          </div>
+          <div class="guide-item" onclick="showToast('사망')">
+            <div class="guide-icon-wrap gi-gray">🕊️</div>
+            <span class="guide-label">사망</span>
+          </div>
+          <div class="guide-item" onclick="showToast('출생')">
+            <div class="guide-icon-wrap gi-orange">👶</div>
+            <span class="guide-label">출생</span>
+          </div>
+          <div class="guide-item" onclick="showToast('취업')">
+            <div class="guide-icon-wrap gi-blue">💼</div>
+            <span class="guide-label">취업</span>
+          </div>
+          <div class="guide-item" onclick="showToast('창업')">
+            <div class="guide-icon-wrap gi-green">🏪</div>
+            <span class="guide-label">창업</span>
+          </div>
+          <div class="guide-item" onclick="showToast('이사')">
+            <div class="guide-icon-wrap gi-teal">🏠</div>
+            <span class="guide-label">이사</span>
+          </div>
+          <div class="guide-item" onclick="showToast('은퇴')">
+            <div class="guide-icon-wrap gi-red">🌅</div>
+            <span class="guide-label">은퇴</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 결혼 관련 링크 리스트 -->
+      <div class="guide-links">
+        <div class="guide-link-item" onclick="showToast('누군가와 결혼할 때')">
+          <span>누군가와 결혼할 때</span>
+          <span class="gli-arrow">›</span>
+        </div>
+        <div class="guide-link-item" onclick="showToast('외국인과 결혼할 때')">
+          <span>외국인과 결혼할 때</span>
+          <span class="gli-arrow">›</span>
+        </div>
+        <div class="guide-more-btn" onclick="toggleGuideLinks()">
+          더보기 <span id="guide-more-icon">∨</span>
+        </div>
+      </div>
+
+      <!-- 주민등록 모바일 확인 서비스 -->
+      <div class="mobile-id-banner" onclick="openWarningModal()">
+        <div class="mobile-id-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+            <rect x="5" y="2" width="14" height="20" rx="2"/>
+            <line x1="12" y1="18" x2="12" y2="18.5" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <span class="mobile-id-text">주민등록 모바일 확인 서비스</span>
+        <span class="mobile-id-arrow">›</span>
+      </div>
+    </div>
+
+    <!-- 배너 슬라이더 -->
+    <div class="banner-section anim-fade-up anim-delay-6">
+      <div class="banner-slide" id="bannerSlide" onclick="showToast('배너')">
+        <div class="banner-text-wrap">
+          <span class="banner-tag">이벤트</span>
+          <div class="banner-title">내가 받을 수 있는<br>혜택을 확인해보세요!</div>
+          <div class="banner-subtitle">정부24에서 한 번에 조회</div>
+        </div>
+        <span class="banner-emoji">🎁</span>
+      </div>
+      <div class="banner-dots">
+        <div class="banner-dot active" id="dot0"></div>
+        <div class="banner-dot" id="dot1"></div>
+        <div class="banner-dot" id="dot2"></div>
+      </div>
+    </div>
+
+    <!-- 인기 서비스 -->
+    <div class="section anim-fade-up anim-delay-6">
+      <div class="section-header">
+        <span class="section-title">인기 서비스</span>
+      </div>
+      <div class="popular-card">
+        <div class="popular-tabs">
+          <div class="popular-tab active" id="tab-popular" onclick="switchTab('popular')">인기</div>
+          <div class="popular-tab" id="tab-recent"  onclick="switchTab('recent')">최근 발급</div>
+          <div class="popular-tab" id="tab-new"     onclick="switchTab('new')">새로운 서비스</div>
+        </div>
+        <div class="popular-list" id="popular-list">
+          <div class="popular-item" onclick="showToast('주민등록등본(초본)')">
+            <span class="popular-rank">1</span>
+            <span class="popular-name">주민등록등본(초본)</span>
+            <span class="popular-change">▲ 1</span>
+          </div>
+          <div class="popular-item" onclick="showToast('건강보험료 납부확인서')">
+            <span class="popular-rank">2</span>
+            <span class="popular-name">건강보험료 납부확인서</span>
+            <span class="popular-change same">—</span>
+          </div>
+          <div class="popular-item" onclick="showToast('주민등록증 재발급')">
+            <span class="popular-rank">3</span>
+            <span class="popular-name">주민등록증 재발급</span>
+            <span class="popular-change down">▼ 1</span>
+          </div>
+          <div class="popular-item" onclick="showToast('가족관계증명서')">
+            <span class="popular-rank gray">4</span>
+            <span class="popular-name">가족관계증명서</span>
+            <span class="popular-change">▲ 2</span>
+          </div>
+          <div class="popular-item" onclick="showToast('자동차등록원부')">
+            <span class="popular-rank gray">5</span>
+            <span class="popular-name">자동차등록원부</span>
+            <span class="popular-change same">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 국민소통채널 -->
+    <div class="channel-section anim-fade-up anim-delay-6">
+      <div class="channel-header">
+        <span class="channel-title">국민소통채널</span>
+        <button class="channel-add-btn" onclick="showToast('채널 추가')">＋</button>
+      </div>
+      <div class="channel-card">
+
+        <!-- 브랜드 행 -->
+        <div class="channel-brand-row">
+          <img src="{{ url_for('static', filename='css/icon.png') }}" class="channel-logo" alt="정부24">
+          <span class="channel-brand-name">정부24+</span>
+          <span class="channel-brand-arrow">∨</span>
+          <div class="channel-social-icons">
+            <!-- X (트위터) -->
+            <div class="channel-social-icon" onclick="showToast('X')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#1a1a1a">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.262 5.636 5.902-5.636zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </div>
+            <!-- 블로그 b -->
+            <div class="channel-social-icon" onclick="showToast('블로그')" style="font-size:13px;font-weight:700;color:#03c75a;">b</div>
+          </div>
+        </div>
+
+        <!-- 콜센터 -->
+        <div class="channel-info-row">
+          <div class="channel-info-label">콜센터</div>
+          <div class="channel-info-value">
+            1588-2188,<br>
+            02-721-0600 <small>(지역번호 '02'를 확인하세요.)</small><br>
+            <small>(09:00 ~ 18:00 평일)</small>
+          </div>
+        </div>
+
+        <!-- 정부민원안내콜센터 -->
+        <div class="channel-info-row">
+          <div class="channel-info-label">정부민원안내콜센터</div>
+          <div class="channel-info-value">
+            국번없이 110 <small>(무료, 주말포함 365일 24시간)</small>
+          </div>
+        </div>
+
+        <!-- 개인정보처리방침 -->
+        <div style="display:flex;gap:14px;padding-top:4px;border-top:1px solid #f0f0f0;margin-top:4px;">
+          <span onclick="showToast('개인정보처리방침')" style="font-size:12px;color:#555;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">개인정보처리방침</span>
+          <span onclick="showToast('이용약관')" style="font-size:12px;color:#555;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">이용약관</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="site-footer anim-fade-up anim-delay-6">
+      <div class="footer-copyright">
+        © Ministry of the Interior and Safety. All Rights Reserved.
+      </div>
+      <div class="footer-top-btn">
+        <div class="top-btn" onclick="scrollToTop()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="18 15 12 9 6 15"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+  </main><!-- /main-content -->
+
+  <!-- ④ 하단 탭 바 -->
+  <nav class="bottom-tab-bar">
+    <div class="tab-item active" onclick="scrollToTop()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="#e8003d" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/>
+        <path d="M9 21V12h6v9" fill="#fff"/>
+      </svg>
+      <span class="tab-label" style="color:#e8003d;font-weight:700;">홈</span>
+    </div>
+    <div class="tab-item" onclick="showToast('서비스')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.8">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span class="tab-label">서비스</span>
+    </div>
+    <div class="tab-item" onclick="showToast('나의생활')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.8">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+      <span class="tab-label">나의생활</span>
+    </div>
+    <div class="tab-item" onclick="showToast('혜택')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.8">
+        <polyline points="20 12 20 22 4 22 4 12"/>
+        <rect x="2" y="7" width="20" height="5" rx="1"/>
+        <line x1="12" y1="22" x2="12" y2="7"/>
+        <path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/>
+        <path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/>
+      </svg>
+      <span class="tab-label">혜택</span>
+    </div>
+    <div class="tab-item" onclick="showToast('설정')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.8">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+      </svg>
+      <span class="tab-label">설정</span>
+    </div>
+  </nav>
+
+</div><!-- /page-wrap -->
+
+<!-- ===== 주민등록 모바일 확인 서비스 - 경고 모달 ===== -->
+<div id="warningModal" style="
+  display:none; position:fixed; inset:0; z-index:800;
+  background:#fff; flex-direction:column; overflow-y:auto;">
+
+  <!-- 상단 헤더 -->
+  <div style="
+    display:flex; align-items:center; padding:14px 16px;
+    border-bottom:1px solid #eee; background:#fff; gap:10px;">
+    <div onclick="closeWarningModal()" style="cursor:pointer; padding:4px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.2">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;flex:1;justify-content:center;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span style="font-size:13px;color:#555;font-family:'Noto Sans KR',sans-serif;">주민등록증 모바일확인서비스</span>
+    </div>
+    <div onclick="toggleMenu()" style="cursor:pointer;padding:4px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 경고 내용 -->
+  <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:40px 24px;">
+    <div style="
+      background:#fff; border:1px solid #e0e0e0;
+      border-radius:12px; padding:28px 22px;
+      max-width:360px; width:100%;
+      box-shadow:0 2px 16px rgba(0,0,0,0.07);">
+
+      <!-- 정부24 로고 + 제목 -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+        <img src="{{ url_for('static', filename='css/icon.png') }}"
+             style="width:28px;height:28px;object-fit:contain;">
+        <span style="
+          font-size:15px; font-weight:700; color:#1a1a1a;
+          font-family:'SJ세종고딕B','Noto Sans KR',sans-serif;
+          letter-spacing:-0.3px;">
+          주민등록사항 조작 및 부정 사용 금지
+        </span>
+      </div>
+
+      <!-- 본문 -->
+      <p style="
+        font-size:13.5px; color:#333; line-height:1.75;
+        font-family:'Noto Sans KR',sans-serif; letter-spacing:-0.2px;
+        margin-bottom:18px;">
+        정보통신기기를 이용한 주민등록사항을 조작하거나 부정하게 사용시
+        <span style="color:#e8003d;font-weight:600;">3년 이하의 징역</span> 또는
+        <span style="color:#e8003d;font-weight:600;">3천만원 이하의 벌금</span>에
+        처해 질 수 있습니다.
+      </p>
+
+      <p style="
+        font-size:12px; color:#888;
+        font-family:'Noto Sans KR',sans-serif;
+        text-align:center; margin-bottom:22px;">
+        ※ 주민등록법 제37조
+      </p>
+
+      <!-- 확인 버튼 -->
+      <button onclick="openPinModal()" style="
+        width:100%; padding:15px 0;
+        background:#3b5bdb; color:#fff;
+        border:none; border-radius:10px;
+        font-size:16px; font-weight:700;
+        font-family:'Noto Sans KR',sans-serif;
+        cursor:pointer; letter-spacing:-0.3px;
+        transition:background 0.2s;">
+        확인
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 비밀번호 입력 모달 ===== -->
+<div id="pinModal" style="
+  display:none; position:fixed; inset:0; z-index:900;
+  background:#fff; flex-direction:column;">
+
+  <!-- 상단 헤더 -->
+  <div style="
+    display:flex; align-items:center; padding:14px 16px;
+    border-bottom:1px solid #eee; background:#fff; gap:10px;">
+    <div onclick="closePinModal()" style="cursor:pointer;padding:4px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.2">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;flex:1;justify-content:center;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span style="font-size:13px;color:#555;font-family:'Noto Sans KR',sans-serif;">주민등록증 모바일확인서비스</span>
+    </div>
+    <div onclick="toggleMenu()" style="cursor:pointer;padding:4px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 비밀번호 입력 영역 -->
+  <div style="flex:1; padding:32px 24px 16px;">
+    <h2 style="
+      font-size:22px; font-weight:700; color:#1a1a1a;
+      font-family:'SJ세종고딕B','Noto Sans KR',sans-serif;
+      letter-spacing:-0.5px; margin-bottom:8px;">
+      비밀번호 입력
+    </h2>
+    <p style="
+      font-size:13.5px; color:#888;
+      font-family:'Noto Sans KR',sans-serif;
+      letter-spacing:-0.2px; margin-bottom:28px;">
+      비밀번호 6자리를 입력해주세요
+    </p>
+
+    <!-- 6자리 도트 표시 -->
+    <div style="margin-bottom:6px;">
+      <span style="font-size:12px;color:#888;font-family:'Noto Sans KR',sans-serif;">비밀번호 입력</span>
+    </div>
+    <div id="pinDots" style="
+      display:flex; gap:14px; align-items:center;
+      padding:10px 0; border-bottom:2px solid #3b5bdb;
+      margin-bottom:28px;">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+      <div class="pin-dot" id="pd4"></div>
+      <div class="pin-dot" id="pd5"></div>
+    </div>
+
+    <!-- 본인 인증 후 비밀번호 재설정 링크 -->
+    <p style="
+      font-size:12.5px; color:#3b5bdb;
+      font-family:'Noto Sans KR',sans-serif;
+      text-decoration:underline; cursor:pointer;
+      letter-spacing:-0.2px;"
+      onclick="showToast('본인 인증 후 재설정')">
+      본인 인증 후 비밀번호 재설정
+    </p>
+  </div>
+
+  <!-- 숫자 키패드 -->
+  <div style="background:#fff; padding:0 0 env(safe-area-inset-bottom);">
+    <div id="pinKeypad" style="
+      display:grid; grid-template-columns:repeat(3,1fr);
+      border-top:1px solid #e8eaed;">
+      <!-- 1~9 -->
+      <div class="pin-key" onclick="pinInput('1')">1</div>
+      <div class="pin-key" onclick="pinInput('2')">2</div>
+      <div class="pin-key" onclick="pinInput('3')">3</div>
+      <div class="pin-key" onclick="pinInput('4')">4</div>
+      <div class="pin-key" onclick="pinInput('5')">5</div>
+      <div class="pin-key" onclick="pinInput('6')">6</div>
+      <div class="pin-key" onclick="pinInput('7')">7</div>
+      <div class="pin-key" onclick="pinInput('8')">8</div>
+      <div class="pin-key" onclick="pinInput('9')">9</div>
+      <!-- 삭제 / 0 / 확인 -->
+      <div class="pin-key pin-del" onclick="pinDelete()">
+        <svg width="22" height="16" viewBox="0 0 28 20" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round">
+          <path d="M10 1H26a1 1 0 011 1v16a1 1 0 01-1 1H10L1 10 10 1z"/>
+          <line x1="17" y1="7" x2="23" y2="13"/><line x1="23" y1="7" x2="17" y2="13"/>
+        </svg>
+      </div>
+      <div class="pin-key" onclick="pinInput('0')">0</div>
+      <div class="pin-key pin-confirm" id="pinConfirmBtn" onclick="pinConfirm()">확인</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* 핀 도트 */
+  .pin-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: #ddd;
+    transition: background 0.15s, transform 0.15s;
+    flex-shrink: 0;
+  }
+  .pin-dot.filled {
+    background: #3b5bdb;
+    transform: scale(1.1);
+  }
+
+  /* 키패드 셀 */
+  .pin-key {
+    display: flex; align-items: center; justify-content: center;
+    height: 64px;
+    font-size: 24px; font-weight: 400;
+    color: #1a1a1a;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    border-right: 1px solid #e8eaed;
+    border-bottom: 1px solid #e8eaed;
+    transition: background 0.12s;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .pin-key:nth-child(3n) { border-right: none; }
+  .pin-key:nth-last-child(-n+3) { border-bottom: none; }
+  .pin-key:active { background: #f0f2f5; }
+
+  .pin-del { background: #f5f6f8; }
+  .pin-del:active { background: #e8eaed; }
+
+  .pin-confirm {
+    background: #3b5bdb; color: #fff;
+    font-size: 17px; font-weight: 700;
+  }
+  .pin-confirm:active { background: #2d4bc8; }
+  .pin-confirm.disabled {
+    background: #c0c8e8; cursor: default;
+  }
+</style>
+<div id="toast" style="
+  position:fixed; bottom:88px; left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:rgba(30,30,30,0.88); color:#fff;
+  padding:9px 20px; border-radius:20px;
+  font-size:13px; font-family:'Noto Sans KR',sans-serif;
+  opacity:0; pointer-events:none;
+  transition:opacity 0.25s,transform 0.25s;
+  z-index:9999; white-space:nowrap;
+  backdrop-filter:blur(6px);
+"></div>
+
+<!-- ===== 전체메뉴 드로어 (정부24 홈 스타일) ===== -->
+<div id="menuDrawer" style="
+  position:fixed; top:0; left:-105%;
+  width:88%; max-width:360px; height:100%;
+  background:#f5f6f8; z-index:600;
+  transition:left 0.3s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column; overflow-y:auto;
+  box-shadow:4px 0 24px rgba(0,0,0,0.13);">
+
+  <!-- 드로어 헤더 -->
+  <div style="
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 18px 12px; background:#fff;
+    border-bottom:1px solid #eee;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <!-- 홈 아이콘 -->
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/>
+      </svg>
+      <span style="font-size:15px;font-weight:700;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;letter-spacing:-0.3px;">정부24 홈</span>
+    </div>
+    <button onclick="toggleMenu()" style="background:none;border:none;cursor:pointer;padding:4px;line-height:1;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- MyGOV 섹션 -->
+  <div style="background:#fff; margin-bottom:8px; padding:16px 18px 8px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;cursor:pointer;" onclick="location.href='/mygov'">
+      <!-- M 아이콘 원 -->
+      <div style="
+        width:38px;height:38px;border-radius:50%;
+        background:#1a7f5a;
+        display:flex;align-items:center;justify-content:center;
+        flex-shrink:0;">
+        <span style="color:#fff;font-size:16px;font-weight:700;font-family:'Noto Sans KR',sans-serif;">M</span>
+      </div>
+      <span style="font-size:17px;font-weight:700;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;letter-spacing:-0.3px;cursor:pointer;" onclick="location.href='/mygov'">MyGOV</span>
+    </div>
+
+    <!-- 2열 메뉴 그리드 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #f0f0f0;">
+      <div class="menu-grid-item" onclick="showToast('내 지갑')">내 지갑</div>
+      <div class="menu-grid-item" onclick="showToast('나의 생활정보')">나의 생활정보</div>
+      <div class="menu-grid-item" style="display:flex;align-items:center;justify-content:space-between;" onclick="toggleSubMenu('submenu-apply')">
+        <span>나의 신청내역</span>
+        <span id="arrow-apply" style="font-size:11px;color:#aaa;transition:transform 0.2s;">∨</span>
+      </div>
+      <div class="menu-grid-item" style="display:flex;align-items:center;justify-content:space-between;" onclick="toggleSubMenu('submenu-manage')">
+        <span>나의 정보관리</span>
+        <span id="arrow-manage" style="font-size:11px;color:#aaa;transition:transform 0.2s;">∨</span>
+      </div>
+    </div>
+    <!-- 서브메뉴 (나의 신청내역) -->
+    <div id="submenu-apply" style="display:none;background:#f8f9fc;border-radius:8px;margin:4px 0 4px;overflow:hidden;">
+      <div class="menu-sub-item" onclick="showToast('민원 신청현황')">민원 신청현황</div>
+      <div class="menu-sub-item" onclick="showToast('보조금 신청현황')">보조금 신청현황</div>
+    </div>
+    <!-- 서브메뉴 (나의 정보관리) -->
+    <div id="submenu-manage" style="display:none;background:#f8f9fc;border-radius:8px;margin:4px 0 4px;overflow:hidden;">
+      <div class="menu-sub-item" onclick="showToast('회원정보 수정')">회원정보 수정</div>
+      <div class="menu-sub-item" onclick="showToast('알림설정')">알림설정</div>
+    </div>
+  </div>
+
+  <!-- 민원서비스 섹션 -->
+  <div style="background:#fff;margin-bottom:8px;padding:16px 18px 8px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <div style="
+        width:32px;height:32px;border-radius:50%;
+        background:#fff5e0;
+        display:flex;align-items:center;justify-content:center;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f0a030" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/>
+          <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+        </svg>
+      </div>
+      <span style="font-size:15px;font-weight:700;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;letter-spacing:-0.3px;">민원서비스</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #f0f0f0;">
+      <div class="menu-grid-item" onclick="showToast('민원 찾기')">민원 찾기</div>
+      <div class="menu-grid-item" onclick="showToast('주제별 보기')">주제별 보기</div>
+      <div class="menu-grid-item" onclick="showToast('행정서식 간편이용')">행정서식 간편이용</div>
+      <div class="menu-grid-item" onclick="showToast('사실/진위확인')">사실/진위확인</div>
+      <div class="menu-grid-item" onclick="showToast('원스톱서비스')">원스톱서비스</div>
+      <div class="menu-grid-item" onclick="showToast('기업/단체 서비스')">기업/단체 서비스</div>
+      <div class="menu-grid-item" onclick="showToast('돌봄시설 등 위치 찾기')">돌봄시설 등 위치 찾기</div>
+      <div class="menu-grid-item" onclick="showToast('정부24 다운로드파일 진본...')">정부24 다운로드파일 진본...</div>
+    </div>
+  </div>
+
+  <!-- 혜택알리미 섹션 -->
+  <div style="background:#fff;margin-bottom:8px;padding:16px 18px 8px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <div style="
+        width:32px;height:32px;border-radius:50%;
+        background:#fff0e0;
+        display:flex;align-items:center;justify-content:center;">
+        🔔
+      </div>
+      <span style="font-size:15px;font-weight:700;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;letter-spacing:-0.3px;">혜택알리미</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #f0f0f0;">
+      <div class="menu-grid-item" onclick="showToast('혜택알리미 홈')">혜택알리미 홈</div>
+      <div class="menu-grid-item" onclick="showToast('나의 혜택')">나의 혜택</div>
+      <div class="menu-grid-item" onclick="showToast('관심')">관심</div>
+      <div class="menu-grid-item" onclick="showToast('발견')">발견</div>
+    </div>
+  </div>
+
+  <!-- 생활가이드 섹션 -->
+  <div style="background:#fff;margin-bottom:8px;padding:16px 18px 8px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <div style="
+        width:32px;height:32px;border-radius:50%;
+        background:#e8f5e9;
+        display:flex;align-items:center;justify-content:center;">
+        📖
+      </div>
+      <span style="font-size:15px;font-weight:700;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;letter-spacing:-0.3px;">생활가이드</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #f0f0f0;">
+      <div class="menu-grid-item" onclick="showToast('생활가이드 홈')">생활가이드 홈</div>
+      <div class="menu-grid-item" onclick="showToast('생애주기별 서비스')">생애주기별 서비스</div>
+      <div class="menu-grid-item" onclick="showToast('생활상황별 서비스')">생활상황별 서비스</div>
+      <div class="menu-grid-item" onclick="showToast('정책정보')">정책정보</div>
+    </div>
+  </div>
+
+  <!-- 정부24 소개 섹션 -->
+  <div style="background:#fff;margin-bottom:8px;padding:16px 18px 8px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <div style="
+        width:32px;height:32px;border-radius:50%;
+        background:#e8eeff;
+        display:flex;align-items:center;justify-content:center;">
+        <img src="{{ url_for('static', filename='css/icon.png') }}" style="width:18px;height:18px;object-fit:contain;">
+      </div>
+      <span style="font-size:15px;font-weight:700;color:#1a1a1a;font-family:'Noto Sans KR',sans-serif;letter-spacing:-0.3px;">정부24 소개</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #f0f0f0;">
+      <div class="menu-grid-item" onclick="showToast('정부24 소개')">정부24 소개</div>
+      <div class="menu-grid-item" onclick="showToast('이용안내')">이용안내</div>
+      <div class="menu-grid-item" onclick="showToast('공지사항')">공지사항</div>
+      <div class="menu-grid-item" onclick="showToast('자주하는 질문')">자주하는 질문</div>
+    </div>
+  </div>
+
+  <!-- 하단 여백 -->
+  <div style="height:24px;"></div>
+</div>
+
+<!-- 오버레이 -->
+<div id="menuOverlay" onclick="toggleMenu()" style="
+  position:fixed;inset:0;background:rgba(0,0,0,0.45);
+  z-index:599;display:none;opacity:0;transition:opacity 0.3s;"></div>
+
+<style>
+  .menu-grid-item {
+    padding: 13px 4px;
+    font-size: 13.5px;
+    color: #333;
+    font-family: 'Noto Sans KR', sans-serif;
+    letter-spacing: -0.3px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.12s;
+    line-height: 1.4;
+  }
+  .menu-grid-item:active { background: #f0f2f5; }
+  .menu-grid-item:nth-child(odd) { border-right: 1px solid #f0f0f0; padding-right: 12px; }
+  .menu-grid-item:nth-child(even) { padding-left: 12px; }
+
+  .menu-sub-item {
+    padding: 11px 16px;
+    font-size: 13px;
+    color: #555;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    border-bottom: 1px solid #eff0f2;
+    transition: background 0.12s;
+  }
+  .menu-sub-item:last-child { border-bottom: none; }
+  .menu-sub-item:active { background: #ecedf0; }
+  .menu-sub-item::before {
+    content: '- ';
+    color: #bbb;
+  }
+</style>
+
+<script>
+  /* 모바일 확인 서비스 - 경고 모달 */
+  function openWarningModal() {
+    const m = document.getElementById('warningModal');
+    m.style.display = 'flex';
+    m.style.animation = 'fadeIn 0.2s ease both';
+  }
+  function closeWarningModal() {
+    document.getElementById('warningModal').style.display = 'none';
+  }
+
+  /* 비밀번호 입력 모달 */
+  let pinValue = '';
+  function openPinModal() {
+    closeWarningModal();
+    pinValue = '';
+    updatePinDots();
+    const m = document.getElementById('pinModal');
+    m.style.display = 'flex';
+    m.style.animation = 'slideInRight 0.25s ease both';
+  }
+  function closePinModal() {
+    document.getElementById('pinModal').style.display = 'none';
+    pinValue = '';
+    updatePinDots();
+    openWarningModal();
+  }
+
+  function updatePinDots() {
+    for (let i = 0; i < 6; i++) {
+      const dot = document.getElementById('pd' + i);
+      dot.classList.toggle('filled', i < pinValue.length);
+    }
+    const btn = document.getElementById('pinConfirmBtn');
+    if (pinValue.length === 6) {
+      btn.classList.remove('disabled');
+    } else {
+      btn.classList.add('disabled');
+    }
+  }
+
+  function pinInput(num) {
+    if (pinValue.length >= 6) return;
+    pinValue += num;
+    updatePinDots();
+    // 진동 피드백 (지원 기기)
+    if (navigator.vibrate) navigator.vibrate(10);
+  }
+
+  function pinDelete() {
+    if (pinValue.length === 0) return;
+    pinValue = pinValue.slice(0, -1);
+    updatePinDots();
+    if (navigator.vibrate) navigator.vibrate(10);
+  }
+
+  function pinConfirm() {
+    if (pinValue.length < 6) return;
+
+    const btn = document.getElementById('pinConfirmBtn');
+    btn.textContent = '···';
+
+    // 민증 key 가져와서 이동
+    fetch('/mobile-id-key')
+      .then(r => r.json())
+      .then(data => {
+        if (data.key) {
+          window.location.href = '/' + data.key;
+        } else {
+          showToast('민증 정보를 찾을 수 없습니다.');
+          btn.textContent = '확인';
+          pinValue = '';
+          updatePinDots();
+        }
+      })
+      .catch(() => {
+        showToast('오류가 발생했습니다.');
+        btn.textContent = '확인';
+        pinValue = '';
+        updatePinDots();
+      });
+  }
+  let _tt;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(_tt);
+    _tt = setTimeout(() => {
+      t.style.opacity = '0';
+      t.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 1600);
+  }
+
+  /* 전체메뉴 드로어 */
+  let menuOpen = false;
+  function toggleMenu() {
+    menuOpen = !menuOpen;
+    const d = document.getElementById('menuDrawer');
+    const o = document.getElementById('menuOverlay');
+    if (menuOpen) {
+      o.style.display = 'block';
+      // 한 프레임 뒤에 left 변경해야 트랜지션 발동
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          d.style.left    = '0';
+          o.style.opacity = '1';
+        });
+      });
+    } else {
+      d.style.left    = '-105%';
+      o.style.opacity = '0';
+      setTimeout(() => { o.style.display = 'none'; }, 300);
+    }
+  }
+
+  /* 서브메뉴 토글 */
+  function toggleSubMenu(id) {
+    const el = document.getElementById(id);
+    const key = id.replace('submenu-', '');
+    const arrow = document.getElementById('arrow-' + key);
+    const isOpen = el.style.display !== 'none';
+    el.style.display = isOpen ? 'none' : 'block';
+    if (arrow) arrow.textContent = isOpen ? '∨' : '∧';
+  }
+
+  /* 맨 위로 */
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* 인기/최근/새로운 탭 */
+  const tabData = {
+    popular: [
+      { rank:'1', name:'주민등록등본(초본)',     change:'▲ 1', cls:'' },
+      { rank:'2', name:'건강보험료 납부확인서',  change:'—',   cls:'same' },
+      { rank:'3', name:'주민등록증 재발급',       change:'▼ 1',cls:'down' },
+      { rank:'4', name:'가족관계증명서',          change:'▲ 2',cls:'' },
+      { rank:'5', name:'자동차등록원부',          change:'—',  cls:'same' },
+    ],
+    recent: [
+      { rank:'1', name:'주민등록등본(초본)',      change:'', cls:'same' },
+      { rank:'2', name:'자동차등록원부',          change:'', cls:'same' },
+      { rank:'3', name:'건강보험료 납부확인서',   change:'', cls:'same' },
+      { rank:'4', name:'여권 재발급',             change:'', cls:'same' },
+      { rank:'5', name:'건축물대장 열람·발급',    change:'', cls:'same' },
+    ],
+    new: [
+      { rank:'N', name:'모바일 주민등록증 확인',  change:'NEW', cls:'' },
+      { rank:'N', name:'전기차 보조금 신청',      change:'NEW', cls:'' },
+      { rank:'N', name:'긴급복지지원 신청',       change:'NEW', cls:'' },
+      { rank:'N', name:'청년 월세 지원',          change:'NEW', cls:'' },
+      { rank:'N', name:'중소기업 취업지원',       change:'NEW', cls:'' },
+    ]
+  };
+
+  function switchTab(key) {
+    ['popular','recent','new'].forEach(k => {
+      document.getElementById('tab-'+k).classList.toggle('active', k === key);
+    });
+    const list = document.getElementById('popular-list');
+    list.style.opacity   = '0';
+    list.style.transform = 'translateY(6px)';
+    setTimeout(() => {
+      list.innerHTML = tabData[key].map(item => `
+        <div class="popular-item" onclick="showToast('${item.name}')">
+          <span class="popular-rank ${item.cls==='same'?'gray':''}"
+            style="${item.rank==='N'?'color:#e8003d;font-size:11px;font-weight:700;':''}">${item.rank}</span>
+          <span class="popular-name">${item.name}</span>
+          <span class="popular-change ${item.cls}">${item.change}</span>
+        </div>`).join('');
+      list.style.transition = 'opacity 0.25s, transform 0.25s';
+      list.style.opacity    = '1';
+      list.style.transform  = 'translateY(0)';
+    }, 150);
+  }
+
+  /* 배너 자동 슬라이드 */
+  const banners = [
+    { bg:'linear-gradient(135deg,#3b5bdb 0%,#7048e8 100%)', tag:'이벤트', title:'내가 받을 수 있는<br>혜택을 확인해보세요!', sub:'정부24에서 한 번에 조회',    emoji:'🎁' },
+    { bg:'linear-gradient(135deg,#e8003d 0%,#ff6b6b 100%)', tag:'공지',   title:'주민등록 서비스<br>모바일로 간편하게!',     sub:'언제 어디서나 정부24',    emoji:'📱' },
+    { bg:'linear-gradient(135deg,#0ca678 0%,#20c997 100%)', tag:'혜택',   title:'청년 지원 혜택<br>지금 바로 신청하세요',    sub:'청년을 위한 정부 서비스', emoji:'🌟' },
+  ];
+  let curBanner = 0;
+
+  function rotateBanner() {
+    curBanner = (curBanner + 1) % banners.length;
+    const b  = banners[curBanner];
+    const el = document.getElementById('bannerSlide');
+    el.style.transition = 'opacity 0.4s';
+    el.style.opacity    = '0';
+    setTimeout(() => {
+      el.style.background = b.bg;
+      el.querySelector('.banner-tag').textContent      = b.tag;
+      el.querySelector('.banner-title').innerHTML      = b.title;
+      el.querySelector('.banner-subtitle').textContent = b.sub;
+      el.querySelector('.banner-emoji').textContent    = b.emoji;
+      el.style.opacity = '1';
+    }, 200);
+    document.querySelectorAll('.banner-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === curBanner);
+    });
+  }
+  setInterval(rotateBanner, 3500);
+
+  /* 생활가이드 더보기 토글 */
+  let guideExpanded = false;
+  const extraLinks = [
+    '재혼할 때', '이혼할 때', '사별 후 혼자 살 때'
+  ];
+  function toggleGuideLinks() {
+    guideExpanded = !guideExpanded;
+    const icon = document.getElementById('guide-more-icon');
+    const container = document.querySelector('.guide-links');
+    if (guideExpanded) {
+      icon.textContent = '∧';
+      extraLinks.forEach(text => {
+        const el = document.createElement('div');
+        el.className = 'guide-link-item extra-link';
+        el.innerHTML = '<span>' + text + '</span><span class="gli-arrow">›</span>';
+        el.onclick = () => showToast(text);
+        container.insertBefore(el, container.querySelector('.guide-more-btn'));
+      });
+    } else {
+      icon.textContent = '∨';
+      container.querySelectorAll('.extra-link').forEach(el => el.remove());
+    }
+  }
+
+  /* 모바일 주소창 숨기기 */
+  window.addEventListener('load', () => {
+    setTimeout(() => window.scrollTo(0, 1), 0);
+  });
+</script>
+
+</body>
+</html>

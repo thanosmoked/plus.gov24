@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='css/mobile_icon.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/font_SJSejongGothic.css') }}">
+  <title>내 정보 수정 - 정부24+</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+    html, body {
+      width:100%; min-height:100%;
+      font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;
+      background:#f5f6f8;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* ── 공식 배너 ── */
+    .gov-banner {
+      background:#333; padding:7px 16px;
+      display:flex; align-items:center; gap:6px;
+    }
+    .gov-banner p { font-size:11px; color:#ccc; letter-spacing:-0.2px; }
+
+    /* ── 페이지 래퍼 ── */
+    .page-wrap {
+      max-width:480px; margin:0 auto;
+      background:#f5f6f8; min-height:100vh;
+      padding-bottom:40px;
+    }
+
+    /* ── 모달 카드 ── */
+    .modal-card {
+      background:#fff;
+      margin:12px 14px;
+      border-radius:16px;
+      box-shadow:0 4px 20px rgba(0,0,0,0.10);
+      overflow:hidden;
+      animation: fadeInUp 0.3s ease both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity:0; transform:translateY(14px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ── 모달 헤더 ── */
+    .modal-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:18px 18px 14px;
+      border-bottom:1px solid #f0f0f0;
+    }
+    .modal-title {
+      font-size:17px; font-weight:700; color:#1a1a1a;
+      font-family:'SJ세종고딕B','Noto Sans KR',sans-serif;
+      letter-spacing:-0.4px;
+    }
+    .modal-close {
+      width:32px; height:32px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; border-radius:50%;
+      transition:background 0.15s;
+    }
+    .modal-close:active { background:#f0f0f0; }
+
+    /* ── 사진 + 설명 ── */
+    .photo-section {
+      display:flex; align-items:center; gap:14px;
+      padding:16px 18px 12px;
+      border-bottom:1px solid #f5f5f5;
+    }
+    .photo-wrap {
+      position:relative; flex-shrink:0;
+      width:64px; height:64px;
+      border-radius:10px; overflow:hidden;
+      background:#e8eaed;
+      cursor:pointer;
+    }
+    .photo-wrap img {
+      width:100%; height:100%; object-fit:cover;
+    }
+    .photo-wrap .photo-placeholder {
+      width:100%; height:100%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:28px;
+    }
+    .photo-edit-badge {
+      position:absolute; bottom:0; left:0; right:0;
+      background:rgba(0,0,0,0.45);
+      display:flex; align-items:center; justify-content:center;
+      padding:4px 0;
+      font-size:10px; color:#fff;
+      font-family:'Noto Sans KR',sans-serif;
+      gap:3px;
+    }
+    .photo-desc {
+      font-size:12.5px; color:#888;
+      font-family:'Noto Sans KR',sans-serif;
+      line-height:1.6; letter-spacing:-0.2px;
+    }
+
+    /* ── 폼 영역 ── */
+    .form-body { padding:4px 18px 18px; }
+
+    .field-group { margin-top:16px; }
+
+    .field-label {
+      font-size:12px; color:#888;
+      font-family:'Noto Sans KR',sans-serif;
+      letter-spacing:-0.2px;
+      margin-bottom:6px;
+      display:block;
+    }
+
+    .field-input {
+      width:100%;
+      border:none;
+      border-bottom:1.5px solid #e0e0e0;
+      padding:10px 2px;
+      font-size:15px; color:#1a1a1a;
+      font-family:'Noto Sans KR',sans-serif;
+      letter-spacing:-0.3px;
+      background:transparent;
+      outline:none;
+      transition:border-color 0.2s;
+      border-radius:0;
+      -webkit-appearance:none;
+    }
+    .field-input:focus {
+      border-bottom-color:#3b5bdb;
+    }
+    .field-input::placeholder { color:#ccc; }
+
+    /* ── 저장 버튼 ── */
+    .save-btn-wrap { padding:20px 18px 4px; }
+    .save-btn {
+      width:100%; padding:15px 0;
+      background:#3b5bdb; color:#fff;
+      border:none; border-radius:12px;
+      font-size:16px; font-weight:700;
+      font-family:'Noto Sans KR',sans-serif;
+      cursor:pointer; letter-spacing:-0.3px;
+      transition:background 0.2s, transform 0.1s;
+    }
+    .save-btn:active { background:#2d4bc8; transform:scale(0.98); }
+
+    /* ── 성공 토스트 ── */
+    #toast {
+      position:fixed; bottom:32px; left:50%;
+      transform:translateX(-50%) translateY(20px);
+      background:rgba(30,30,30,0.9); color:#fff;
+      padding:10px 22px; border-radius:22px;
+      font-size:13.5px; font-family:'Noto Sans KR',sans-serif;
+      opacity:0; pointer-events:none;
+      transition:opacity 0.25s, transform 0.25s;
+      z-index:9999; white-space:nowrap;
+      backdrop-filter:blur(6px);
+    }
+
+    /* ── 민증 선택 탭 (여러 건 있을 때) ── */
+    .record-tabs {
+      display:flex; gap:8px; overflow-x:auto;
+      padding:14px 18px 0; scrollbar-width:none;
+    }
+    .record-tabs::-webkit-scrollbar { display:none; }
+    .record-tab {
+      flex-shrink:0; padding:7px 16px;
+      border-radius:20px; border:1.5px solid #e0e0e0;
+      font-size:13px; color:#555;
+      font-family:'Noto Sans KR',sans-serif;
+      cursor:pointer; transition:all 0.15s;
+      background:#fff;
+      white-space:nowrap;
+    }
+    .record-tab.active {
+      background:#3b5bdb; color:#fff; border-color:#3b5bdb;
+      font-weight:600;
+    }
+
+    /* ── 빈 상태 ── */
+    .empty-state {
+      text-align:center; padding:60px 24px;
+      color:#aaa; font-size:14px;
+      font-family:'Noto Sans KR',sans-serif;
+      line-height:1.8;
+    }
+    .empty-state .empty-icon { font-size:44px; margin-bottom:14px; }
+
+    /* ── 뒤로가기 헤더 ── */
+    .top-header {
+      display:flex; align-items:center; gap:8px;
+      padding:12px 16px;
+      background:#fff;
+      border-bottom:1px solid #eee;
+      position:sticky; top:0; z-index:100;
+    }
+    .back-btn {
+      width:36px; height:36px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; border-radius:50%;
+      transition:background 0.15s;
+    }
+    .back-btn:active { background:#f0f0f0; }
+    .top-header-title {
+      font-size:15px; font-weight:700; color:#1a1a1a;
+      font-family:'Noto Sans KR',sans-serif;
+      letter-spacing:-0.3px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 공식 배너 -->
+<div class="gov-banner">
+  <span style="font-size:13px;">🇰🇷</span>
+  <p>이 누리집은 대한민국 공식 전자정부 누리집입니다.</p>
+</div>
+
+<div class="page-wrap">
+
+  <!-- 상단 헤더 -->
+  <div class="top-header">
+    <div class="back-btn" onclick="history.back()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.2">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </div>
+    <span class="top-header-title">내 정보 수정</span>
+  </div>
+
+  {% if not records %}
+  <!-- 민증 없음 -->
+  <div class="empty-state">
+    <div class="empty-icon">🪪</div>
+    <p>등록된 민증 정보가 없습니다.<br>텔레그램 봇에서 먼저 민증을 제작해주세요.</p>
+  </div>
+
+  {% else %}
+
+  <!-- 민증이 여러 건이면 탭 선택 -->
+  {% if records|length > 1 %}
+  <div class="record-tabs" id="recordTabs">
+    {% for r in records %}
+    <div class="record-tab {% if loop.first %}active{% endif %}"
+         onclick="selectRecord({{ loop.index0 }}, this)">
+      {{ r.name }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- 수정 카드 (JS로 records 배열 주입 후 동적 렌더) -->
+  <div class="modal-card" id="editCard">
+
+    <!-- 헤더 -->
+    <div class="modal-header">
+      <span class="modal-title">내 정보 수정</span>
+      <div class="modal-close" onclick="history.back()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 사진 + 안내 -->
+    <div class="photo-section">
+      <div class="photo-wrap" onclick="document.getElementById('imageInput').click()">
+        <img id="previewImg" src="" alt="증명사진"
+             onerror="this.style.display='none';document.getElementById('photoPlaceholder').style.display='flex'">
+        <div id="photoPlaceholder" class="photo-placeholder" style="display:none;">👤</div>
+        <div class="photo-edit-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
+            <path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+          </svg>
+          변경
+        </div>
+      </div>
+      <p class="photo-desc">사진 / 이름 / 생년월일 / 주소를<br>모두 수정할 수 있어요.</p>
+    </div>
+
+    <!-- 폼 -->
+    <form id="editForm" method="POST" action="/mygov/update" enctype="multipart/form-data">
+      <input type="hidden" name="id" id="fieldId">
+      <input type="hidden" name="query" id="fieldQuery">
+      <!-- 숨겨진 파일 입력 -->
+      <input type="file" id="imageInput" name="image" accept="image/*"
+             style="display:none" onchange="previewImage(this)">
+
+      <div class="form-body">
+
+        <div class="field-group">
+          <label class="field-label">이름</label>
+          <input class="field-input" type="text" name="name" id="fieldName"
+                 placeholder="이름을 입력하세요">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">생년월일 (앞 6자리)</label>
+          <input class="field-input" type="text" name="ssn" id="fieldSsn"
+                 placeholder="000000" maxlength="20"
+                 inputmode="text">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">주민번호 뒷자리</label>
+          <input class="field-input" type="text" name="ssn_back" id="fieldSsnBack"
+                 placeholder="1111111" maxlength="10"
+                 inputmode="numeric">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">지역</label>
+          <input class="field-input" type="text" name="region" id="fieldRegion"
+                 placeholder="예: 경북관">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">상세 주소</label>
+          <input class="field-input" type="text" name="address" id="fieldAddress"
+                 placeholder="주소를 입력하세요">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">발급일</label>
+          <input class="field-input" type="text" name="issue_date" id="fieldIssueDate"
+                 placeholder="예: 2026.02.09" inputmode="numeric">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">발급 장소</label>
+          <input class="field-input" type="text" name="issue_place" id="fieldIssuePlace"
+                 placeholder="예: 공산당">
+        </div>
+
+      </div><!-- /form-body -->
+
+      <div class="save-btn-wrap">
+        <button class="save-btn" type="submit">저장</button>
+      </div>
+
+    </form>
+  </div><!-- /modal-card -->
+
+  {% endif %}
+
+</div><!-- /page-wrap -->
+
+<!-- 토스트 -->
+<div id="toast"></div>
+
+<!-- 민증 데이터 JSON 주입 -->
+<script>
+  const RECORDS = {{ records | tojson }};
+  let currentIdx = 0;
+
+  function selectRecord(idx, tabEl) {
+    currentIdx = idx;
+    // 탭 활성화
+    document.querySelectorAll('.record-tab').forEach(t => t.classList.remove('active'));
+    if (tabEl) tabEl.classList.add('active');
+    fillForm(RECORDS[idx]);
+  }
+
+  function fillForm(r) {
+    document.getElementById('fieldId').value        = r.id      || '';
+    document.getElementById('fieldQuery').value     = r.query   || '';
+    document.getElementById('fieldName').value      = r.name    || '';
+    document.getElementById('fieldRegion').value    = r.region  || '';
+    document.getElementById('fieldAddress').value   = r.address || '';
+    document.getElementById('fieldIssueDate').value = r.issue_date || '';
+    document.getElementById('fieldIssuePlace').value = r.region || '';
+
+    // 주민번호 앞/뒤 분리
+    const ssn = (r.ssn || '').replace('-', '');
+    document.getElementById('fieldSsn').value     = ssn.slice(0, 6);
+    document.getElementById('fieldSsnBack').value = ssn.slice(6);
+
+    // 사진
+    const img = document.getElementById('previewImg');
+    const ph  = document.getElementById('photoPlaceholder');
+    if (r.img_url) {
+      img.src = r.img_url;
+      img.style.display = 'block';
+      ph.style.display  = 'none';
+    } else {
+      img.style.display = 'none';
+      ph.style.display  = 'flex';
+    }
+  }
+
+  // 폼 submit 전 주민번호 합치기
+  document.getElementById('editForm').addEventListener('submit', function(e) {
+    const front = document.getElementById('fieldSsn').value.trim();
+    const back  = document.getElementById('fieldSsnBack').value.trim();
+    document.getElementById('fieldSsn').value = front + '-' + back;
+  });
+
+  // 사진 미리보기
+  function previewImage(input) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.getElementById('previewImg');
+      const ph  = document.getElementById('photoPlaceholder');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      ph.style.display  = 'none';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  // 저장 완료 토스트
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.opacity   = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => {
+      t.style.opacity   = '0';
+      t.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 2400);
+  }
+
+  // 초기 데이터 채우기
+  if (RECORDS.length > 0) fillForm(RECORDS[0]);
+
+  // 저장 완료 파라미터 감지
+  if (location.search.includes('saved=1')) {
+    showToast('✅ 저장되었습니다.');
+    history.replaceState(null, '', '/mygov');
+  }
+</script>
+
+</body>
+</html>

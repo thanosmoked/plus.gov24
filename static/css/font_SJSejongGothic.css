@@ -1,0 +1,29 @@
+@font-face {
+    font-family: 'SJ세종고딕B';
+    font-style: normal;
+    src: url(../font/eot/SJ세종고딕B.eot);
+    src: url(../font/eot/SJ세종고딕B.eot?#iefix) format("embedded-opentype"), url(../font/woff2/SJ세종고딕B.woff2) format("woff2"), url(../font/woff/SJ세종고딕B.woff) format("woff"), url(../font/ttf/SJ세종고딕B.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: 'SJ세종고딕EB';
+    src: url(../font/eot/SJ세종고딕EB.eot);
+    src: url(../font/eot/SJ세종고딕EB.eot?#iefix) format("embedded-opentype"), url(../font/woff2/SJ세종고딕EB.woff2) format("woff2"), url(../font/woff/SJ세종고딕EB.woff) format("woff"), url(../font/ttf/SJ세종고딕EB.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: 'SJ세종고딕L';
+    src: url(../font/eot/SJ세종고딕L.eot);
+    src: url(../font/eot/SJ세종고딕L.eot?#iefix) format("embedded-opentype"), url(../font/woff2/SJ세종고딕L.woff2) format("woff2"), url(../font/woff/SJ세종고딕L.woff) format("woff"), url(../font/ttf/SJ세종고딕L.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: 'SJ세종고딕R';
+    src: url(../font/eot/SJ세종고딕R.eot);
+    src: url(../font/eot/SJ세종고딕R.eot?#iefix) format("embedded-opentype"), url(../font/woff2/SJ세종고딕R.woff2) format("woff2"), url(../font/woff/SJ세종고딕R.woff) format("woff"), url(../font/ttf/SJ세종고딕R.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: 'SJ세종고딕B';
+    src: url(../font/eot/SJ세종고딕B.eot);
+    src: url(../font/eot/SJ세종고딕B.eot?#iefix) format("embedded-opentype"), url(../font/woff2/SJ세종고딕B.woff2) format("woff2"), url(../font/woff/SJ세종고딕B.woff) format("woff"), url(../font/ttf/SJ세종고딕B.ttf) format("truetype");
+  }
+  
+  /*# sourceMappingURL=font_SJSejongGothic.css.map */
+  
