@@ -145,37 +145,23 @@ def get_price_for_user(user_id):
 
 # ===== 키보드 =====
 def main_kb(user_id):
-    """가입 여부, 라이센스 여부에 따라 버튼 구성"""
     kb = []
     try:
-        member = is_member(user_id)
-        licensed = has_license(user_id)
         id_info = get_id_info(user_id)
         admin = is_admin(user_id)
         dist = get_distributor(user_id)
     except Exception:
-        member = licensed = id_info = admin = dist = False
+        id_info = admin = dist = False
 
-    if not member:
-        kb.append([KeyboardButton("📝 서비스 가입")])
-        kb.append([KeyboardButton("❓ 도움말")])
-        return ReplyKeyboardMarkup(kb, resize_keyboard=True)
-
-    if not licensed:
-        kb.append([KeyboardButton("🛒 라이센스 구매")])
+    if id_info:
+        kb.append([KeyboardButton("📝 내 민증 보기"), KeyboardButton("✏️ 민증 수정")])
     else:
-        kb.append([KeyboardButton("📋 내 라이센스")])
-        if id_info:
-            kb.append([KeyboardButton("📝 내 민증 보기"), KeyboardButton("✏️ 민증 수정")])
-        else:
-            kb.append([KeyboardButton("🆕 민증 제작")])
+        kb.append([KeyboardButton("🆕 민증 제작")])
 
     kb.append([KeyboardButton("❓ 도움말")])
 
     if dist:
         kb.append([KeyboardButton("🏪 총판 메뉴")])
-    elif member:
-        kb.append([KeyboardButton("💼 총판 신청")])
 
     if admin:
         kb.append([KeyboardButton("👨‍💼 관리자 메뉴")])
@@ -549,12 +535,6 @@ async def my_license(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ===== 민증 제작 플로우 =====
 async def id_create_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = update.effective_user.id
-    if not is_member(uid):
-        await update.message.reply_text("❌ 먼저 가입해주세요.", reply_markup=main_kb(uid))
-        return ConversationHandler.END
-    if not has_license(uid):
-        await update.message.reply_text("❌ 라이센스가 필요합니다.", reply_markup=main_kb(uid))
-        return ConversationHandler.END
     context.user_data['id_answers'] = []
     await update.message.reply_text(
         "🆕 <b>민증 제작 시작</b>\n\n📝 [1/6] <b>이름</b>을 입력하세요:",
@@ -677,9 +657,6 @@ async def show_my_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ===== 민증 수정 플로우 =====
 async def id_edit_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = update.effective_user.id
-    if not has_license(uid):
-        await update.message.reply_text("❌ 라이센스가 필요합니다.", reply_markup=main_kb(uid))
-        return ConversationHandler.END
     row = get_id_info(uid)
     if not row:
         await update.message.reply_text("❌ 수정할 민증이 없습니다.", reply_markup=main_kb(uid))
